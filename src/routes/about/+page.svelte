@@ -1,3 +1,8 @@
+<script>
+
+  import Arrow from "../../components/Arrow.svelte";
+
+</script>
 <h1>About</h1>
-<a href="/">Left</a>
-<a href="/contact">Right</a>
+<Arrow direction="left" link="/"/>
+<Arrow direction="right" link="/contact"/>

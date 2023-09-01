@@ -5,3 +5,5 @@
 <h1>Lewis Torrington</h1>
 <Arrow direction="left" link="/contact"/>
 <Arrow direction="right" link="/about"/>
+
+<p>Work in progress 👷</p>

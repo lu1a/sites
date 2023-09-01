@@ -62,7 +62,7 @@ Instead of a CV, just go look at my LinkedIn. :P
 </div>
 <br />
 <div class="output">
-Countries of unique visitors to this site (via my Golang site -> kakfa -> Timescale):
+Countries of unique visitors to this site (via my Golang API -> kakfa -> Timescale):
 <ol>
     <li>Finland: 79%</li>
     <li>Australia: 16%</li>
@@ -73,15 +73,15 @@ Countries of unique visitors to this site (via my Golang site -> kakfa -> Timesc
 <br />
 <br />
 <div class="output">
-$ Ping me if you want me to contribute to your git project!
+Ping me if you want me to contribute to your git project!
 </div>
 <br />
 <br />
 <div class="output">
-$ Note: This site was written in Go + HTML by me. You can find the
+Note: This site was written in Svelte by me. You can find the
 <a
     style="color: white"
-    href="https://github.com/lu1a/live-explan"
+    href="https://github.com/lu1a/portfolio-site"
     target="_blank"
     >source code</a
 >

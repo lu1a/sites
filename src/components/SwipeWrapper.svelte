@@ -1,4 +1,6 @@
 <script>
+  import Arrow from "./Arrow.svelte";
+
   /** @type {String} */
   export let rightLink;
   /** @type {String} */
@@ -46,6 +48,9 @@
   on:touchend={handleTouchEnd}
   >
     <slot />
+
+  <Arrow direction="left" link={leftLink}/>
+  <Arrow direction="right" link={rightLink}/>
 </div>
     
   

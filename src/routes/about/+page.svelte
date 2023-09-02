@@ -1,6 +1,5 @@
 <script>
 
-  import Arrow from "../../components/Arrow.svelte";
   import SwipeWrapper from "../../components/SwipeWrapper.svelte";
 
   let leftLink = "/";
@@ -9,8 +8,6 @@
 
 <SwipeWrapper leftLink={leftLink} rightLink={rightLink}>
   <h1>About</h1>
-  <Arrow direction="left" link={leftLink}/>
-  <Arrow direction="right" link={rightLink}/>
 
   <div>
   Hello, my name is Lewis Torrington and this is my page.
@@ -63,7 +60,7 @@
   >
   </div>
   <div>
-  Instead of a CV, just go look at my LinkedIn. :P
+  Instead of a CV, just go look at my LinkedIn. 😇
   </div>
   <br />
   <div>

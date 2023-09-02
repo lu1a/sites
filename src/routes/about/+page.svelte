@@ -72,7 +72,6 @@
       <li><i>Other: 1%</i></li>
   </ol>
   </div>
-  <br />
   <div>
   Ping me if you want me to contribute to your git project!
   </div>

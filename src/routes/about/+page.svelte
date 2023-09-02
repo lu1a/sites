@@ -12,7 +12,7 @@
   <Arrow direction="left" link={leftLink}/>
   <Arrow direction="right" link={rightLink}/>
 
-  <div class="output">
+  <div>
   Hello, my name is Lewis Torrington and this is my page.
   <br />
   About me:
@@ -44,7 +44,7 @@
   </ul>
   </div>
   <br />
-  <div class="output">
+  <div>
   <b>GitHub:</b>
   <a
       style="color: white"
@@ -53,7 +53,7 @@
       >https://github.com/lu1a</a
   >
   </div>
-  <div class="output">
+  <div>
   LinkedIn:
   <a
       style="color: white"
@@ -62,11 +62,11 @@
       >https://www.linkedin.com/in/lewis-torrington</a
   >
   </div>
-  <div class="output">
+  <div>
   Instead of a CV, just go look at my LinkedIn. :P
   </div>
   <br />
-  <div class="output">
+  <div>
   Countries of unique visitors to this site (via my Golang API -> kakfa -> Timescale):
   <ol>
       <li>Finland: 79%</li>
@@ -76,13 +76,11 @@
   </ol>
   </div>
   <br />
-  <br />
-  <div class="output">
+  <div>
   Ping me if you want me to contribute to your git project!
   </div>
   <br />
-  <br />
-  <div class="output">
+  <div>
   Note: This site was written in Svelte by me. You can find the
   <a
       style="color: white"

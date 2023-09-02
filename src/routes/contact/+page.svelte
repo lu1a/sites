@@ -1,10 +1,16 @@
 <script>
 
   import Arrow from "../../components/Arrow.svelte";
+  import SwipeWrapper from "../../components/SwipeWrapper.svelte";
 
+  let leftLink = "/about";
+  let rightLink = "/";
 </script>
-<h1>Contact</h1>
-<Arrow direction="left" link="/about"/>
-<Arrow direction="right" link="/"/>
 
-<p>Work in progress 👷</p>
+<SwipeWrapper leftLink={leftLink} rightLink={rightLink}>
+  <h1>Contact</h1>
+  <Arrow direction="left" link={leftLink}/>
+  <Arrow direction="right" link={rightLink}/>
+
+  <p>Work in progress 👷</p>
+</SwipeWrapper>

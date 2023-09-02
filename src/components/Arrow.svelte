@@ -1,8 +1,10 @@
 <script>
-    export let direction;
-    export let link;
+  /** @type {String} */
+  export let direction;
+  /** @type {String} */
+  export let link;
 </script>
 
 <a href={link}>
-    {direction === 'left' ? '👈' : direction === 'right' ? '👉' : ''}
+  {direction === 'left' ? '👈' : direction === 'right' ? '👉' : ''}
 </a>

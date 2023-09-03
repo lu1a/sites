@@ -33,9 +33,8 @@
     </p>
   </div>
   
-  <GlassCard style="margin-top: 1rem;margin-left: 2rem;">
+  <GlassCard style="margin-top: -1rem;margin-left: 7rem;">
     <p class="no-padding">
-      Work in progress 👷<br/>
       Swipe to see more..
     </p>
   </GlassCard>

@@ -1,13 +1,27 @@
 <script>
 
+  import GlassCard from "../../components/GlassCard.svelte";
   import SwipeWrapper from "../../components/SwipeWrapper.svelte";
 
-  let leftLink = "/about";
+  let leftLink = "/data";
   let rightLink = "/";
 </script>
 
 <SwipeWrapper leftLink={leftLink} rightLink={rightLink}>
-  <h1>Contact</h1>
+  <div style="padding: 1rem;">
+    <h1>Contact</h1>
 
-  <p>Work in progress 👷</p>
+    <!-- TODO -->
+  </div>
+  <GlassCard style="margin-left: 1rem;">
+    <p class="no-padding">
+      Work in progress 👷
+    </p>
+  </GlassCard>
 </SwipeWrapper>
+
+<style>
+  .no-padding {
+    margin: 0;
+  }
+</style>

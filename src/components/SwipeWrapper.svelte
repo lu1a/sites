@@ -29,6 +29,17 @@
     }
   }
 </script>
+  
+<div
+  class="fullscreen-wrapper"
+  on:touchstart={handleTouchStart}
+  on:touchend={handleTouchEnd}
+  >
+    <slot />
+
+  <Arrow direction="left" link={leftLink}/>
+  <Arrow direction="right" link={rightLink}/>
+</div>
 
 <style>
   .fullscreen-wrapper {
@@ -41,18 +52,3 @@
     height: 100%;
   }
 </style>
-  
-<div
-  class="fullscreen-wrapper"
-  on:touchstart={handleTouchStart}
-  on:touchend={handleTouchEnd}
-  >
-    <slot />
-
-  <Arrow direction="left" link={leftLink}/>
-  <Arrow direction="right" link={rightLink}/>
-</div>
-    
-  
-  
-  

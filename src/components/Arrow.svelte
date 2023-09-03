@@ -5,6 +5,10 @@
   export let link;
 </script>
 
+<a class="arrow {direction}" href={link}>
+  {direction === 'left' ? '👈' : direction === 'right' ? '👉' : ''}
+</a>
+
 <style>
   .arrow {
     position: absolute;
@@ -22,7 +26,3 @@
     right: 5%;
   }
 </style>
-
-<a class="arrow {direction}" href={link}>
-  {direction === 'left' ? '👈' : direction === 'right' ? '👉' : ''}
-</a>

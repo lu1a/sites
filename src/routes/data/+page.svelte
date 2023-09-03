@@ -1,6 +1,17 @@
 <script>
-  import { Graphic, RectangleLayer, XAxis, YAxis, x2s } from '@snlab/florence';
-  import { scaleLinear, scaleBand } from 'd3-scale';
+  // @ts-nocheck
+
+  import { Bar } from 'svelte-chartjs';
+  import {
+    Chart,
+    Title,
+    Tooltip,
+    Legend,
+    BarElement,
+    CategoryScale,
+    LinearScale,
+  } from 'chart.js';
+
   import SwipeWrapper from "../../components/SwipeWrapper.svelte";
   import GlassCard from '../../components/GlassCard.svelte';
 
@@ -8,10 +19,50 @@
   let rightLink = "/contact";
 
   // TODO: use real data from tsdb
-  const x = ["Finland", "Australia", "Germany", "Other"];
-  const y = [79, 4, 1, 16];
-  const scaleX = scaleBand () .domain(x) .padding (0.5);
-  const scaleY = scaleLinear () .domain ([0, Math.max(...y) ]);
+  let data = {
+    labels: ["Finland", "Australia", "Germany", "Other"],
+    datasets: [
+      {
+        data: [79, 4, 1, 16],
+        backgroundColor: [
+          'white',
+          'white',
+          'white',
+          'white',
+        ],
+      },
+    ]
+  };
+
+  const options = {
+    animation: false,
+    barThickness: 10,
+    plugins: {
+      legend: {
+        display: false,
+      },
+    },
+    responsive: true,
+    scales: {
+      x: {
+        ticks: {
+          color: "white",
+        },
+      },
+      y: {
+        display: false,
+      },
+    },
+  };
+  
+  Chart.register(
+    Title,
+    Tooltip,
+    Legend,
+    BarElement,
+    CategoryScale,
+    LinearScale
+  );
 </script>
 
 <SwipeWrapper leftLink={leftLink} rightLink={rightLink}>
@@ -20,18 +71,9 @@
 
     <div>
       <p class="no-padding">Countries of unique visitors to this site (via my Golang API -> kakfa -> Timescale):</p>
-      <div style="margin-left: -1.3rem;">
-        <Graphic width={300} height={180} {scaleX} {scaleY} flipY padding={20}>
-          <RectangleLayer
-            x1={x}
-            x2={x2s(x)}
-            y1={Array(x.length).fill(0)}
-            y2={y}
-            fill="white"
-          />
-          <XAxis baseLineColor="white" labelColor="white" labelFont="Verdana" />
-          <YAxis baseLineColor="white" ticks={false} />
-        </Graphic>
+      <br />
+      <div style="width: 300px;">
+        <Bar {data} options={options} />
       </div>
     </div>
 

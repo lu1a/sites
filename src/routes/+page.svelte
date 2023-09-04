@@ -1,9 +1,9 @@
 <script>
-  import GlassCard from "../components/GlassCard.svelte";
-  import SwipeWrapper from "../components/SwipeWrapper.svelte";
+  import GlassCard from "../components/GlassCard.svelte"
+  import SwipeWrapper from "../components/SwipeWrapper.svelte"
 
-  let leftLink = "/contact";
-  let rightLink = "/about";
+  let leftLink = "/contact"
+  let rightLink = "/about"
 </script>
 
 <SwipeWrapper leftLink={leftLink} rightLink={rightLink}>

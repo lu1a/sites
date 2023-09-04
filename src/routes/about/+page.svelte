@@ -1,8 +1,8 @@
 <script>
-  import SwipeWrapper from "../../components/SwipeWrapper.svelte";
+  import SwipeWrapper from "../../components/SwipeWrapper.svelte"
 
-  let leftLink = "/";
-  let rightLink = "/data";
+  let leftLink = "/"
+  let rightLink = "/data"
 
 </script>
 

@@ -1,7 +1,7 @@
 <script>
   // @ts-nocheck
 
-  import { Bar } from 'svelte-chartjs';
+  import { Bar } from 'svelte-chartjs'
   import {
     Chart,
     Title,
@@ -10,13 +10,13 @@
     BarElement,
     CategoryScale,
     LinearScale,
-  } from 'chart.js';
+  } from 'chart.js'
 
-  import SwipeWrapper from "../../components/SwipeWrapper.svelte";
-  import GlassCard from '../../components/GlassCard.svelte';
+  import SwipeWrapper from "../../components/SwipeWrapper.svelte"
+  import GlassCard from '../../components/GlassCard.svelte'
 
-  let leftLink = "/about";
-  let rightLink = "/contact";
+  let leftLink = "/about"
+  let rightLink = "/contact"
 
   // TODO: use real data from tsdb
   let data = {
@@ -32,7 +32,7 @@
         ],
       },
     ]
-  };
+  }
 
   const options = {
     animation: false,
@@ -53,7 +53,7 @@
         display: false,
       },
     },
-  };
+  }
   
   Chart.register(
     Title,
@@ -62,7 +62,7 @@
     BarElement,
     CategoryScale,
     LinearScale
-  );
+  )
 </script>
 
 <SwipeWrapper leftLink={leftLink} rightLink={rightLink}>

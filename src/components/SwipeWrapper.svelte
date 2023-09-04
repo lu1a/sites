@@ -1,31 +1,31 @@
 <script>
-  import Arrow from "./Arrow.svelte";
+  import Arrow from "./Arrow.svelte"
 
   /** @type {String} */
-  export let rightLink;
+  export let rightLink
   /** @type {String} */
-  export let leftLink;
+  export let leftLink
 
-  let touchStartX = 0;
-  let touchEndX = 0;
-  let threshold = 50; // Minimum swipe distance to trigger navigation
+  let touchStartX = 0
+  let touchEndX = 0
+  let threshold = 50 // Minimum swipe distance to trigger navigation
 
   // @ts-ignore
   function handleTouchStart(event) {
-    touchStartX = event.touches[0].clientX;
+    touchStartX = event.touches[0].clientX
   }
 
   // @ts-ignore
   function handleTouchEnd(event) {
-    touchEndX = event.changedTouches[0].clientX;
-    let swipeDistance = touchStartX - touchEndX;
+    touchEndX = event.changedTouches[0].clientX
+    let swipeDistance = touchStartX - touchEndX
 
     if (swipeDistance > threshold) {
       // Swipe right, navigate to the next link/page
-      window.location.pathname = rightLink;
+      window.location.pathname = rightLink
     } else if (swipeDistance < -threshold) {
       // Swipe left, navigate to the previous link/page
-      window.location.pathname = leftLink;
+      window.location.pathname = leftLink
     }
   }
 </script>

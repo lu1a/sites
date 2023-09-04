@@ -1,14 +1,14 @@
 <script>
-  import GlassCard from "../../components/GlassCard.svelte";
-  import SwipeWrapper from "../../components/SwipeWrapper.svelte";
+  import GlassCard from "../../components/GlassCard.svelte"
+  import SwipeWrapper from "../../components/SwipeWrapper.svelte"
 
-  let leftLink = "/data";
-  let rightLink = "/";
+  let leftLink = "/data"
+  let rightLink = "/"
 
-  let sender_address = '';
-  let subject = '';
-  let content = '';
-  let responseMessage = '';
+  let sender_address = ''
+  let subject = ''
+  let content = ''
+  let responseMessage = ''
 
   async function handleSubmit() {
     const response = await fetch('/contact', {
@@ -17,9 +17,9 @@
       headers: {
         'content-type': 'application/json'
       }
-    });
+    })
 
-    responseMessage = await response.json();
+    responseMessage = await response.json()
   }
 </script>
 

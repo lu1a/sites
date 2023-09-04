@@ -1,8 +1,8 @@
 <script>
   /** @type {String} */
-  export let direction;
+  export let direction
   /** @type {String} */
-  export let link;
+  export let link
 </script>
 
 <a class="arrow {direction}" href={link}>

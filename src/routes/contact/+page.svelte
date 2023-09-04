@@ -1,5 +1,4 @@
 <script>
-  import GlassCard from "../../components/GlassCard.svelte"
   import SwipeWrapper from "../../components/SwipeWrapper.svelte"
 
   let leftLink = "/data"
@@ -28,18 +27,24 @@
     <h1>Contact</h1>
 
     <form on:submit={handleSubmit}>
-      <label for="sender_address">Sender Address:</label>
-      <input type="email" id="sender_address" bind:value={sender_address} required />
+      <div class="input-wrapper">
+        <label for="sender_address">Sender Address:</label>
+        <input type="email" id="sender_address" bind:value={sender_address} required />
+      </div>
 
       <br />
 
-      <label for="subject">Subject:</label>
-      <input type="text" id="subject" bind:value={subject} required />
+      <div class="input-wrapper">
+        <label for="subject">Subject:</label>
+        <input type="text" id="subject" bind:value={subject} required />
+      </div>
 
       <br />
 
-      <label for="content">Content:</label>
-      <textarea id="content" bind:value={content} required />
+      <div class="input-wrapper">
+        <label for="content">Content:</label>
+        <textarea id="content" bind:value={content} required />
+      </div>
 
       <br />
 
@@ -50,15 +55,12 @@
       <p>{responseMessage}</p>
     {/if}
   </div>
-  <GlassCard style="margin-left: 1rem;">
-    <p class="no-padding">
-      Work in progress 👷
-    </p>
-  </GlassCard>
 </SwipeWrapper>
 
 <style>
-  .no-padding {
-    margin: 0;
+  .input-wrapper {
+    display: flex;
+    width: 17rem;
+    justify-content: space-between;
   }
 </style>

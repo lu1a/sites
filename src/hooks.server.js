@@ -2,6 +2,9 @@ import { sendVisitorLog } from '$lib/visitor-log'
 
 /** @type {import('@sveltejs/kit').Handle} */
 export async function handle({ event, resolve }) {
+  const editableRequest = event.request.clone();
+  let bodyString = await editableRequest.text()
+  bodyString = bodyString.replace(/{/g, "[[").replace(/}/g, "]]")
   sendVisitorLog({
     "for_user": 1, // me
     "visited_at": new Date().toISOString(),
@@ -15,7 +18,7 @@ export async function handle({ event, resolve }) {
     "referer_url": null, // TODO
     "preferred_languages": event.request.headers.get("Accept-Language"),
     "cookies": event.cookies.getAll().map(cookie => `${cookie.name}=${cookie.value}`).join(','),
-    "body": event.request.body,
+    "body": bodyString,
   })
   
   const response = await resolve(event)

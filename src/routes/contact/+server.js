@@ -4,7 +4,7 @@ import { LIVE_EXPLAN_API_URL, LIVE_EXPLAN_API_TOKEN } from '$env/static/private'
 /** @type {import('./$types').RequestHandler} */
 export async function POST({ request }) {
   const { sender_address, subject, content } = await request.json()
-  const data = { sender_address, subject, content }
+  const dataString = JSON.stringify({ sender_address, subject, content })
 
   let responseMessage = ''
 
@@ -14,7 +14,7 @@ export async function POST({ request }) {
       headers: {
         'Authorization': `Bearer ${LIVE_EXPLAN_API_TOKEN}`,
       },
-      body: JSON.stringify(data),
+      body: dataString,
     })
 
     if (response.ok) {

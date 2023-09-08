@@ -6,7 +6,7 @@
 </script>
 
 <a class="arrow {direction}" href={link}>
-  {direction === 'left' ? '👈' : direction === 'right' ? '👉' : ''}
+  {direction === 'left' ? '← Back' : direction === 'right' ? 'Next →' : ''}
 </a>
 
 <style>
@@ -15,14 +15,20 @@
     top: 90%;
     z-index: 1;
 
-    font-size: 1.5rem;
+    font-size: 1.2rem;
+    color: white;
+    text-decoration: none;
+    text-shadow: 0 0 10px #fff, 0 0 21px #fff;
   }
 
   .left {
-    left: 5%;
+    left: 10%;
+
+    color: white;
+    text-shadow: 0 0 10px #fff, 0 0 21px #fff;
   }
 
   .right {
-    right: 5%;
+    right: 10%;
   }
 </style>

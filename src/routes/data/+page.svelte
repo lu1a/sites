@@ -14,6 +14,7 @@
 
   import SwipeWrapper from "../../components/SwipeWrapper.svelte"
   import GlassCard from '../../components/GlassCard.svelte'
+  import GreyCard from '../../components/GreyCard.svelte';
 
   let leftLink = "/about"
   let rightLink = "/contact"
@@ -66,20 +67,11 @@
 </script>
 
 <SwipeWrapper leftLink={leftLink} rightLink={rightLink}>
-  <div style="padding: 1rem;">
+  <div style="padding: 2rem;">
     <h1>Data</h1>
 
-    <div>
-      <p class="no-padding">Countries of unique visitors to this site (via my Golang API -> kakfa -> Timescale):</p>
-      <br />
-      <div style="width: 300px;">
-        <Bar {data} options={options} />
-      </div>
-    </div>
-
-    <div style="display: flex;">
-      <p>Note: </p>
-      <p style="padding-left: 0.5rem;">This site was written in Svelte by me.<br />You can find the
+    <GreyCard>
+      <p class="no-margin">This site was written in Svelte by me.<br />You can find the
         <a
           style="color: white"
           href="https://github.com/lu1a/portfolio-site"
@@ -90,20 +82,30 @@
         on my GitHub.<br />As you'll be able to see there, I have no code for
         cookies or other nasties.
       </p>
+    </GreyCard>
+    
+    <br />
+    <br />
+
+    <div>
+      <div style="width: 300px;">
+        <Bar {data} options={options} />
+      </div>
+      <br />
+      <p class="no-margin p-over-pure-black">Countries of unique visitors to this site<br />(via my Golang API → kakfa → Timescale)</p>
     </div>
 
   </div>
-  
-  <GlassCard style="margin-top: -17em;margin-left: 7rem;">
-    <p class="no-padding">
-     No surprises here...
-    </p>
-  </GlassCard>
 
 </SwipeWrapper>
 
 <style>
-  .no-padding {
+  .no-margin {
     margin: 0;
+  }
+
+  .p-over-pure-black {
+    color: rgb(132 132 135);
+    font-size: 1.2rem;
   }
 </style>

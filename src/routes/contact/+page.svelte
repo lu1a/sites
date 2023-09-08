@@ -23,29 +23,23 @@
 </script>
 
 <SwipeWrapper leftLink={leftLink} rightLink={rightLink}>
-  <div style="padding: 1rem;">
+  <div style="padding: 2rem;">
     <h1>Contact</h1>
 
     <form on:submit={handleSubmit}>
-      <div class="input-wrapper">
-        <label for="sender_address">Sender Address:</label>
-        <input type="email" id="sender_address" bind:value={sender_address} required />
-      </div>
+      <input type="email" id="sender_address" class="input" bind:value={sender_address} required placeholder="Email address" style="border-radius: 8px" />
 
       <br />
-
-      <div class="input-wrapper">
-        <label for="subject">Subject:</label>
-        <input type="text" id="subject" bind:value={subject} required />
-      </div>
-
       <br />
 
-      <div class="input-wrapper">
-        <label for="content">Content:</label>
-        <textarea id="content" bind:value={content} required />
-      </div>
+      <input type="text" id="subject" class="input" bind:value={subject} required placeholder="Subject" style="border-radius: 8px" />
 
+      <br />
+      <br />
+
+      <textarea id="content" class="input" bind:value={content} required placeholder="Your message" style="width: 94%; max-width: 25rem; height: 10rem;" />
+
+      <br />
       <br />
 
       <button type="submit">Send Message</button>
@@ -58,9 +52,20 @@
 </SwipeWrapper>
 
 <style>
-  .input-wrapper {
-    display: flex;
-    width: 17rem;
-    justify-content: space-between;
+  /* hr {
+    height: 1px;
+    border: none;
+    background-color: rgb(91 91 91);
+  } */
+
+  .input {
+    width: 14rem;
+    font-family: helvetica;
+    padding: 0.6rem;
+    border: none;
+    border-radius: 16px;
+
+    background-color: rgb(50,50,50);
+    color: white;
   }
 </style>

@@ -1,4 +1,4 @@
-import { getUniqueIPsByCountry } from '$lib/visitor-log'
+import { getUniqueIPsByCountry } from '$lib/visitorLog'
 import { json } from '@sveltejs/kit'
  
 export async function GET() {

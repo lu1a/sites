@@ -1,4 +1,4 @@
-// @ts-nocheck
+//@ts-nocheck
 import { LIVE_EXPLAN_API_URL, LIVE_EXPLAN_API_TOKEN } from '$env/static/private'
 
 export async function sendVisitorLog(requestObj) {

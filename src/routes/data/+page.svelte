@@ -1,20 +1,18 @@
 <script>
   // @ts-nocheck
 
-  import { Bar } from 'svelte-chartjs'
+  import { Doughnut } from 'svelte-chartjs'
   import {
-    Chart,
+    Chart as ChartJS,
     Title,
     Tooltip,
     Legend,
-    BarElement,
+    ArcElement,
     CategoryScale,
-    LinearScale,
   } from 'chart.js'
 
   import SwipeWrapper from "../../components/SwipeWrapper.svelte"
-  import GlassCard from '../../components/GlassCard.svelte'
-  import GreyCard from '../../components/GreyCard.svelte';
+  import GreyCard from '../../components/GreyCard.svelte'
 
   let leftLink = "/about"
   let rightLink = "/contact"
@@ -26,44 +24,40 @@
       {
         data: [79, 4, 1, 16],
         backgroundColor: [
-          'white',
-          'white',
-          'white',
-          'white',
-        ],
+        '#EE2E31',
+        '#1D7874',
+        '#679289',
+        '#F4C095',
+      ],
+      hoverBackgroundColor: [
+        '#EE2E31',
+        '#1D7874',
+        '#679289',
+        '#F4C095',
+      ],
       },
     ]
   }
 
   const options = {
-    animation: false,
-    barThickness: 10,
+    responsive: true,
+    elements: {arc: {borderWidth: 0,}},
     plugins: {
       legend: {
-        display: false,
-      },
-    },
-    responsive: true,
-    scales: {
-      x: {
-        ticks: {
-          color: "white",
+        labels: {
+          color: "rgb(170 170 170)"
         },
+        position: "right",
       },
-      y: {
-        display: false,
-      },
+      tooltip: {
+        enabled: false,
+      }
     },
+    cutout: "70%",
+    rotation: 90,
   }
   
-  Chart.register(
-    Title,
-    Tooltip,
-    Legend,
-    BarElement,
-    CategoryScale,
-    LinearScale
-  )
+  ChartJS.register(Title, Tooltip, Legend, ArcElement, CategoryScale)
 </script>
 
 <SwipeWrapper leftLink={leftLink} rightLink={rightLink}>
@@ -83,15 +77,11 @@
         cookies or other nasties.
       </p>
     </GreyCard>
-    
-    <br />
-    <br />
 
     <div>
       <div style="width: 300px;">
-        <Bar {data} options={options} />
+        <Doughnut {data} options={options} />
       </div>
-      <br />
       <p class="no-margin p-over-pure-black">Countries of unique visitors to this site<br />(via my Golang API → kakfa → Timescale)</p>
     </div>
 

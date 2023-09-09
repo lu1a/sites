@@ -1,5 +1,5 @@
 <script>
-  import GreyCard from "../../components/GreyCard.svelte";
+  import GreyCard from "../../components/GreyCard.svelte"
 import SwipeWrapper from "../../components/SwipeWrapper.svelte"
 
   let leftLink = "/"

@@ -7,7 +7,7 @@
 </script>
 
 <SwipeWrapper leftLink={null} rightLink={rightLink}>
-  <div style="padding: 4rem 2rem 2rem 2rem;">
+  <div style="padding: 2rem;">
     <img
       class="image-card image-headshot"
       src="/images/lewis-headshot.png"

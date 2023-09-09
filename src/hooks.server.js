@@ -2,7 +2,7 @@ import { sendVisitorLog } from '$lib/visitor-log'
 
 /** @type {import('@sveltejs/kit').Handle} */
 export async function handle({ event, resolve }) {
-  const editableRequest = event.request.clone();
+  const editableRequest = event.request.clone()
   let bodyString = await editableRequest.text()
   bodyString = bodyString.replace(/{/g, "[[").replace(/}/g, "]]")
   sendVisitorLog({

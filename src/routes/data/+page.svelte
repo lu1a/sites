@@ -82,7 +82,7 @@
       <div style="width: 300px;">
         <Doughnut {data} options={options} />
       </div>
-      <p class="no-margin p-over-pure-black">Countries of unique visitors to this site<br />(via my Golang API → kakfa → Timescale)</p>
+      <p class="no-margin p-over-pure-black" style="margin-top: -2.5rem;">Countries of unique visitors to this site<br />(via my Golang API → kakfa → Timescale)</p>
     </div>
 
   </div>

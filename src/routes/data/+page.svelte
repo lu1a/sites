@@ -78,7 +78,7 @@
     <h1>Data</h1>
 
     <GreyCard>
-      <p class="no-margin">This site was written in Svelte by me.<br />You can find the
+      <p class="no-margin">This site was written in Svelte (and bun) by me.<br />You can find the
         <a
           style="color: white"
           href="https://github.com/lu1a/portfolio-site"

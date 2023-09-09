@@ -7,6 +7,6 @@ declare global {
 		// interface PageData {}
 		// interface Platform {}
 	}
-}
+};
 
 export {};

@@ -1,8 +1,8 @@
 <script>
   /** @type {String} */
-  export let style
+  export let style;
   /** @type {Number} */
-  export let bounceSpeed = 3
+  export let bounceSpeed = 3;
 </script>
   
 <div class="glass-card" style="{style} animation-duration: {bounceSpeed}s;">

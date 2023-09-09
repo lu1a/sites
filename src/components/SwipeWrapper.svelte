@@ -1,10 +1,10 @@
 <script>
-  import Arrow from "./Arrow.svelte"
+  import Arrow from "./Arrow.svelte";
 
   /** @type {?String} */
-  export let rightLink
+  export let rightLink;
   /** @type {?String} */
-  export let leftLink
+  export let leftLink;
 </script>
   
 <div class="fullscreen-wrapper">

@@ -1,5 +1,5 @@
 //@ts-nocheck
-import { LIVE_EXPLAN_API_URL, LIVE_EXPLAN_API_TOKEN } from '$env/static/private'
+import { LIVE_EXPLAN_API_URL, LIVE_EXPLAN_API_TOKEN } from '$env/static/private';
 
 export async function sendVisitorLog(requestObj) {
   try {
@@ -9,9 +9,9 @@ export async function sendVisitorLog(requestObj) {
         'Authorization': `Bearer ${LIVE_EXPLAN_API_TOKEN}`,
       },
       body: JSON.stringify(requestObj),
-    })
+    });
   } catch (e) {
-    console.log("Whoops, the visitor log died.", e)
+    console.log("Whoops, the visitor log died.", e);
   }
 }
 
@@ -22,11 +22,11 @@ export async function getUniqueIPsByCountry() {
       headers: {
         'Authorization': `Bearer ${LIVE_EXPLAN_API_TOKEN}`,
       },
-    })
-    let uniqueIPsByCountry = await uniqueIPsByCountryResponse.json()
-    return uniqueIPsByCountry
+    });
+    let uniqueIPsByCountry = await uniqueIPsByCountryResponse.json();
+    return uniqueIPsByCountry;
   } catch (e) {
-    console.log("Whoops, GETting the country counts failed.", e)
-    throw e
+    console.log("Whoops, GETting the country counts failed.", e);
+    throw e;
   }
 }

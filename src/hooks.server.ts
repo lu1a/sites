@@ -1,15 +1,15 @@
 //@ts-nocheck
-import { sendVisitorLog } from '$lib/visitorLog'
+import { sendVisitorLog } from '$lib/visitorLog';
 
 export async function handle({ event, resolve }: {
     event: object;
     resolve: Function;
   }) {
-  const editableRequest = event.request.clone()
-  let bodyString = await editableRequest.text()
-  bodyString = bodyString.replace(/{/g, "[[").replace(/}/g, "]]")
+  const editableRequest = event.request.clone();
+  let bodyString = await editableRequest.text();
+  bodyString = bodyString.replace(/{/g, "[[").replace(/}/g, "]]");
 
-  let ip = event.request.headers.get("X-Real-IP") || ''
+  let ip = event.request.headers.get("X-Real-IP") || '';
   let ipData = {
     "isp": null,
     "country": null,
@@ -17,14 +17,14 @@ export async function handle({ event, resolve }: {
     "zip": null,
     "lat": null,
     "lon": null,
-  }
+  };
   try {
     let ipDataResponse = await fetch(`http://ip-api.com/json/${ip}`, {
       method: 'GET',
-    })
-    ipData = await ipDataResponse.json()
+    });
+    ipData = await ipDataResponse.json();
   } catch (e) {
-    console.log("The IP API I'm using failed: ", e)
+    console.log("The IP API I'm using failed: ", e);
   }
 
   sendVisitorLog({
@@ -45,8 +45,8 @@ export async function handle({ event, resolve }: {
     "preferred_languages": event.request.headers.get("Accept-Language"),
     "cookies": event.cookies.getAll().map((cookie: { name: string; value: string }) => `${cookie.name}=${cookie.value}`).join(','),
     "body": bodyString,
-  })
+  });
   
-  const response = await resolve(event)
-  return response
+  const response = await resolve(event);
+  return response;
 }

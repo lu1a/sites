@@ -1,7 +1,7 @@
 <script>
   // @ts-nocheck
 
-  import { Doughnut } from 'svelte-chartjs'
+  import { Doughnut } from 'svelte-chartjs';
   import {
     Chart as ChartJS,
     Title,
@@ -9,13 +9,13 @@
     Legend,
     ArcElement,
     CategoryScale,
-  } from 'chart.js'
+  } from 'chart.js';
 
-  import SwipeWrapper from "../../components/SwipeWrapper.svelte"
-  import GreyCard from '../../components/GreyCard.svelte'
+  import SwipeWrapper from "../../components/SwipeWrapper.svelte";
+  import GreyCard from "../../components/GreyCard.svelte";
 
-  let leftLink = "/about"
-  let rightLink = "/contact"
+  let leftLink = "/about";
+  let rightLink = "/contact";
 
   async function getCountriesData() {
     let countriesResponse = await fetch('/data/countries-data', {
@@ -23,8 +23,8 @@
       headers: {
         'content-type': 'application/json'
       }
-    })
-    let countriesData = await countriesResponse.json()
+    });
+    let countriesData = await countriesResponse.json();
 
     let data = {
       labels: countriesData.labels,
@@ -49,11 +49,11 @@
           ],
         },
       ]
-    }
+    };
 
-    return data
+    return data;
   }
-  let countriesDataPromise = getCountriesData()
+  let countriesDataPromise = getCountriesData();
 
   const options = {
     responsive: true,
@@ -68,9 +68,9 @@
     },
     cutout: "70%",
     rotation: 90,
-  }
+  };
   
-  ChartJS.register(Title, Tooltip, Legend, ArcElement, CategoryScale)
+  ChartJS.register(Title, Tooltip, Legend, ArcElement, CategoryScale);
 </script>
 
 <SwipeWrapper leftLink={leftLink} rightLink={rightLink}>

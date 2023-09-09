@@ -26,40 +26,11 @@
     })
     let countriesData = await countriesResponse.json()
 
-    const key = 'ip_address'
-    const countriesDataUniqueByIP = [...new Map(countriesData.map(item =>[item[key], item])).values()]
-
-    // ⬇️ Making the unique IP data graphable 
-
-    const countryCountObj = {}
-    countriesDataUniqueByIP.forEach((obj) => {
-      const country = obj.ip_country
-
-      // If the country is encountered for the first time, add it to the uniqueCountries array
-      if (!countryCountObj[country]) {
-        countryCountObj[country] = 1
-      } else {
-        // If the country is already in the uniqueCountries array, increment its count
-        countryCountObj[country]++
-      }
-    })
-
-    const countryCountArrOfArrs = Object.entries(countryCountObj)
-    const sortedCountryCountArrOfArrs = countryCountArrOfArrs.sort(function(a, b) {
-      return b[1] - a[1]
-    })
-
-    const firstFiveCountriesArrOfArrs = sortedCountryCountArrOfArrs.slice(0, 5)
-    const otherCountriesCount = sortedCountryCountArrOfArrs.slice(5).reduce((partialSum, a) => partialSum + a[1], 0)
-
-    const firstFiveCountriesCounts = firstFiveCountriesArrOfArrs.reduce((arr, val) => arr.concat(val[1]), [])
-    const firstFiveCountriesLabels = firstFiveCountriesArrOfArrs.reduce((arr, val) => arr.concat(val[0]), [])
-
     let data = {
-      labels: firstFiveCountriesLabels.concat("Other"),
+      labels: countriesData.labels,
       datasets: [
         {
-          data: firstFiveCountriesCounts.concat(otherCountriesCount),
+          data: countriesData.data,
           backgroundColor: [
             '#EE2E31',
             '#1D7874',

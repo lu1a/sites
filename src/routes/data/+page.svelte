@@ -17,27 +17,72 @@
   let leftLink = "/about"
   let rightLink = "/contact"
 
-  // TODO: use real data from tsdb
-  let data = {
-    labels: ["Finland", "Australia", "Germany", "Other"],
-    datasets: [
-      {
-        data: [79, 4, 1, 16],
-        backgroundColor: [
-        '#EE2E31',
-        '#1D7874',
-        '#679289',
-        '#F4C095',
-      ],
-      hoverBackgroundColor: [
-        '#EE2E31',
-        '#1D7874',
-        '#679289',
-        '#F4C095',
-      ],
-      },
-    ]
+  async function getCountriesData() {
+    let countriesResponse = await fetch('/data/countries-data', {
+      method: 'GET',
+      headers: {
+        'content-type': 'application/json'
+      }
+    })
+    let countriesData = await countriesResponse.json()
+
+    const key = 'ip_address'
+    const countriesDataUniqueByIP = [...new Map(countriesData.map(item =>[item[key], item])).values()]
+
+    // ⬇️ Making the unique IP data graphable 
+
+    const countryCountObj = {}
+    countriesDataUniqueByIP.forEach((obj) => {
+      const country = obj.ip_country
+
+      // If the country is encountered for the first time, add it to the uniqueCountries array
+      if (!countryCountObj[country]) {
+        countryCountObj[country] = 1
+      } else {
+        // If the country is already in the uniqueCountries array, increment its count
+        countryCountObj[country]++
+      }
+    })
+
+    const countryCountArrOfArrs = Object.entries(countryCountObj)
+    const sortedCountryCountArrOfArrs = countryCountArrOfArrs.sort(function(a, b) {
+      return b[1] - a[1]
+    })
+
+    const firstFiveCountriesArrOfArrs = sortedCountryCountArrOfArrs.slice(0, 5)
+    const otherCountriesCount = sortedCountryCountArrOfArrs.slice(5).reduce((partialSum, a) => partialSum + a[1], 0)
+
+    const firstFiveCountriesCounts = firstFiveCountriesArrOfArrs.reduce((arr, val) => arr.concat(val[1]), [])
+    const firstFiveCountriesLabels = firstFiveCountriesArrOfArrs.reduce((arr, val) => arr.concat(val[0]), [])
+
+    let data = {
+      labels: firstFiveCountriesLabels.concat("Other"),
+      datasets: [
+        {
+          data: firstFiveCountriesCounts.concat(otherCountriesCount),
+          backgroundColor: [
+            '#EE2E31',
+            '#1D7874',
+            '#679289',
+            '#F4C095',
+            'rgb(104,0,0)',
+            'rgb(110,111,92)',
+          ],
+          hoverBackgroundColor: [
+            '#EE2E31',
+            '#1D7874',
+            '#679289',
+            '#F4C095',
+            'rgb(104,0,0)',
+            'rgb(110,111,92)',
+          ],
+        },
+      ]
+    }
+
+    return data
   }
+  let countriesDataPromise = getCountriesData()
 
   const options = {
     responsive: true,
@@ -49,9 +94,6 @@
         },
         position: "right",
       },
-      tooltip: {
-        enabled: false,
-      }
     },
     cutout: "70%",
     rotation: 90,
@@ -78,12 +120,20 @@
       </p>
     </GreyCard>
 
-    <div>
-      <div style="width: 300px;">
-        <Doughnut {data} options={options} />
+    {#await countriesDataPromise}
+      <!-- Loading countries data... -->
+    {:then data}
+
+      <div>
+        <div style="width: 300px;margin-top: -3rem;">
+          <Doughnut {data} options={options} />
+        </div>
+        <p class="no-margin p-over-pure-black" style="margin-top: -3rem;">Countries of unique visitors to this site<br />(via my Golang API → Kafka → Timescale)</p>
       </div>
-      <p class="no-margin p-over-pure-black" style="margin-top: -2.5rem;">Countries of unique visitors to this site<br />(via my Golang API → Kafka → Timescale)</p>
-    </div>
+
+    {:catch someError}
+      System error: {someError.message}.
+    {/await}
 
   </div>
 

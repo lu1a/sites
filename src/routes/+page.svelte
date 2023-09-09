@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   import GlassCard from "../components/GlassCard.svelte";
   import SwipeWrapper from "../components/SwipeWrapper.svelte";
 

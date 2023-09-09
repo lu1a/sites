@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   import GreyCard from "../../components/GreyCard.svelte";
   import SwipeWrapper from "../../components/SwipeWrapper.svelte";
 

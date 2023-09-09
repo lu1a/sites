@@ -1,8 +1,6 @@
-<script>
-  /** @type {String} */
-  export let direction;
-  /** @type {String} */
-  export let link;
+<script lang="ts">
+  export let direction: string;
+  export let link: string;
 </script>
 
 <a class="arrow {direction}" href={link}>

@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   import SwipeWrapper from "../../components/SwipeWrapper.svelte";
 
   let leftLink = "/data"

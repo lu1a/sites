@@ -1,6 +1,4 @@
-<script>
-  // @ts-nocheck
-
+<script lang="ts">
   import { Doughnut } from 'svelte-chartjs';
   import {
     Chart as ChartJS,
@@ -9,6 +7,7 @@
     Legend,
     ArcElement,
     CategoryScale,
+    type ChartOptions,
   } from 'chart.js';
 
   import SwipeWrapper from "../../components/SwipeWrapper.svelte";
@@ -55,7 +54,7 @@
   }
   let countriesDataPromise = getCountriesData();
 
-  const options = {
+  const options: ChartOptions<'doughnut'> = {
     responsive: true,
     elements: {arc: {borderWidth: 0,}},
     plugins: {

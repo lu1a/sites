@@ -15,18 +15,18 @@ export async function sendVisitorLog(requestObj) {
   }
 }
 
-export async function getAllVisitorLogEntries() {
+export async function getUniqueIPsByCountry() {
   try {
-    let visitorLogEntriesResp = await fetch(`${LIVE_EXPLAN_API_URL}/visitor-log-entries`, {
+    let uniqueIPsByCountryResponse = await fetch(`${LIVE_EXPLAN_API_URL}/unique-ips-by-country`, {
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${LIVE_EXPLAN_API_TOKEN}`,
       },
     })
-    let visitorLogEntries = await visitorLogEntriesResp.json()
-    return visitorLogEntries
+    let uniqueIPsByCountry = await uniqueIPsByCountryResponse.json()
+    return uniqueIPsByCountry
   } catch (e) {
-    console.log("Whoops, GETting the visitor log failed.", e)
+    console.log("Whoops, GETting the country counts failed.", e)
     throw e
   }
 }

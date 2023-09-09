@@ -1,34 +1,19 @@
-import { getAllVisitorLogEntries } from '$lib/visitor-log'
+import { getUniqueIPsByCountry } from '$lib/visitor-log'
 import { json } from '@sveltejs/kit'
  
 export async function GET() {
-  const logEntries = await getAllVisitorLogEntries()
+  const uniqueIPsByCountry = await getUniqueIPsByCountry()
 
-  const key = 'ip_address'
+  // Convert the object to an array of arrays containing only values
   // @ts-ignore
-  const countriesDataUniqueByIP = [...new Map(logEntries.map((item) =>[item[key], item])).values()]
-
-  // ⬇️ Making the unique IP data graphable 
-
-  const countryCountObj = {}
-  countriesDataUniqueByIP.forEach((obj) => {
-    const country = obj.ip_country
-    // @ts-ignore
-    if (!countryCountObj[country]) {
-      // @ts-ignore
-      countryCountObj[country] = 1
-    } else {
-      // @ts-ignore
-      countryCountObj[country]++
-    }
-  })
-
-  const countryCountArrOfArrs = Object.entries(countryCountObj)
+  const countryCountArrOfArrs = uniqueIPsByCountry.map((entry) => Object.values(entry))
+  // @ts-ignore
   const sortedCountryCountArrOfArrs = countryCountArrOfArrs.sort(function(a, b) {
     return b[1] - a[1]
   })
 
   const firstFiveCountriesArrOfArrs = sortedCountryCountArrOfArrs.slice(0, 5)
+  // @ts-ignore
   const otherCountriesCount = sortedCountryCountArrOfArrs.slice(5).reduce((partialSum, a) => partialSum + a[1], 0)
 
   // @ts-ignore

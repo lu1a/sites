@@ -98,7 +98,7 @@
         <div style="width: 300px;margin-top: -3rem;">
           <Doughnut {data} options={options} />
         </div>
-        <p class="no-margin p-over-pure-black" style="margin-top: -3rem;">Countries of unique visitors to this site<br />(via my Golang API → Kafka → Timescale)</p>
+        <p class="no-margin p-over-pure-black" style="margin-top: -3rem;">Countries of unique visitors to this site<br />(via my Golang API → <s>Kafka</s> → Timescale)</p>
       </div>
 
     {:catch someError}

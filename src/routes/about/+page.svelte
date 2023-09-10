@@ -34,8 +34,8 @@
         </li>
         <li>Software engineer:</li>
         <ul>
-          <li>Most interested in: Data science, Rust</li>
-          <li>Current specialties: Go, Python, C++, JS/TS</li>
+          <li>Most interested in: Data science</li>
+          <li>Current lang specialties: Go, Python, JS/TS</li>
         </ul>
       </ul>
     </GreyCard>

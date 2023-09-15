@@ -1,5 +1,5 @@
 <script lang="ts">
-  import SwipeWrapper from "../../components/SwipeWrapper.svelte";
+  import BottomNav from "../../components/BottomNav.svelte";
 
   let leftLink = "/data"
   let rightLink = "/";
@@ -22,34 +22,32 @@
   }
 </script>
 
-<SwipeWrapper leftLink={leftLink} rightLink={rightLink}>
-  <div style="padding: 2rem;">
-    <h1>Contact</h1>
+<h1>Contact</h1>
 
-    <form on:submit={handleSubmit}>
-      <input type="email" id="sender_address" class="input" bind:value={sender_address} required placeholder="Email address" style="border-radius: 8px" />
+<form on:submit={handleSubmit}>
+  <input type="email" id="sender_address" class="input" bind:value={sender_address} required placeholder="Email address" style="border-radius: 8px" />
 
-      <br />
-      <br />
+  <br />
+  <br />
 
-      <input type="text" id="subject" class="input" bind:value={subject} required placeholder="Subject" style="border-radius: 8px" />
+  <input type="text" id="subject" class="input" bind:value={subject} required placeholder="Subject" style="border-radius: 8px" />
 
-      <br />
-      <br />
+  <br />
+  <br />
 
-      <textarea id="content" class="input" bind:value={content} required placeholder="Your message" style="width: 94%; max-width: 25rem; height: 10rem;" />
+  <textarea id="content" class="input" bind:value={content} required placeholder="Your message" style="width: 94%; height: 10rem;" />
 
-      <br />
-      <br />
+  <br />
+  <br />
 
-      <button class="contact-CTA" type="submit">Send Message</button>
-    </form>
-  
-    {#if responseMessage}
-      <p>{responseMessage}</p>
-    {/if}
-  </div>
-</SwipeWrapper>
+  <button class="contact-CTA" type="submit">Send Message</button>
+</form>
+
+{#if responseMessage}
+  <p>{responseMessage}</p>
+{/if}
+
+<BottomNav leftLink={leftLink} rightLink={rightLink} />
 
 <style>
   .input {

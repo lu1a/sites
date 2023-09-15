@@ -10,7 +10,7 @@
     type ChartOptions,
   } from 'chart.js';
 
-  import SwipeWrapper from "../../components/SwipeWrapper.svelte";
+  import BottomNav from "../../components/BottomNav.svelte";
   import GreyCard from "../../components/GreyCard.svelte";
 
   let leftLink = "/about";
@@ -72,42 +72,38 @@
   ChartJS.register(Title, Tooltip, Legend, ArcElement, CategoryScale);
 </script>
 
-<SwipeWrapper leftLink={leftLink} rightLink={rightLink}>
-  <div style="padding: 2rem;">
-    <h1>Data</h1>
+<h1>Data</h1>
 
-    <GreyCard>
-      <p class="no-margin">This site was written in Svelte (and bun) by me.<br />You can find the
-        <a
-          style="color: white"
-          href="https://github.com/lu1a/portfolio-site"
-          target="_blank"
-        >
-          source code
-        </a>
-        on my GitHub.<br />As you'll be able to see there, I have no code for
-        cookies or other nasties.
-      </p>
-    </GreyCard>
+<GreyCard>
+  <p class="no-margin">This site was written in Svelte (and bun) by me.<br />You can find the
+    <a
+      style="color: white"
+      href="https://github.com/lu1a/portfolio-site"
+      target="_blank"
+    >
+      source code
+    </a>
+    on my GitHub.<br />As you'll be able to see there, I have no code for
+    cookies or other nasties.
+  </p>
+</GreyCard>
 
-    {#await countriesDataPromise}
-      <!-- Loading countries data... -->
-    {:then data}
+{#await countriesDataPromise}
+  <!-- Loading countries data... -->
+{:then data}
 
-      <div>
-        <div style="width: 300px;margin-top: -3rem;">
-          <Doughnut {data} options={options} />
-        </div>
-        <p class="no-margin p-over-pure-black" style="margin-top: -3rem;">Countries of unique visitors to this site<br />(via my Golang API → <s>Kafka</s> → Timescale)</p>
-      </div>
-
-    {:catch someError}
-      System error: {someError.message}.
-    {/await}
-
+  <div>
+    <div style="width: 300px;margin-top: -3rem;">
+      <Doughnut {data} options={options} />
+    </div>
+    <p class="no-margin p-over-pure-black" style="margin-top: -3rem;">Countries of unique visitors to this site<br />(via my Golang API → <s>Kafka</s> → Timescale)</p>
   </div>
 
-</SwipeWrapper>
+{:catch someError}
+  System error: {someError.message}.
+{/await}
+
+<BottomNav leftLink={leftLink} rightLink={rightLink} />
 
 <style>
   .no-margin {

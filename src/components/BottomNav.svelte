@@ -19,9 +19,7 @@
   });
 </script>
   
-<div class="fullscreen-wrapper">
-    <slot />
-
+<div class="nav-wrapper">
   {#if leftLink}
     <Arrow direction="left" link={leftLink}/>
   {/if}
@@ -31,9 +29,7 @@
 </div>
 
 <style>
-  .fullscreen-wrapper {
-    overflow: hidden;
-
+  .nav-wrapper {
     position: absolute;
     top: 0;
     left: 0;

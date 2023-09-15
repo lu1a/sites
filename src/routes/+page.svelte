@@ -1,36 +1,34 @@
 <script lang="ts">
   import GlassCard from "../components/GlassCard.svelte";
-  import SwipeWrapper from "../components/SwipeWrapper.svelte";
+  import BottomNav from "../components/BottomNav.svelte";
 
   let rightLink = "/about";
 </script>
 
-<SwipeWrapper leftLink={null} rightLink={rightLink}>
-  <div style="padding: 2rem;">
-    <img
-      class="image-card image-headshot"
-      src="/images/lewis-headshot.png"
-      alt="A headshot of me"
-    />
+<img
+  class="image-card image-headshot"
+  src="/images/lewis-headshot.png"
+  alt="A headshot of me"
+/>
 
-    <GlassCard bounceSpeed={2} style="margin-top: -3rem;margin-left: 8rem;">
-      <p class="no-padding">
-        <span style="display: inline-block;transform: rotate(45deg);">👈</span> me!
-      </p>
-    </GlassCard>
+<GlassCard bounceSpeed={2} style="margin-top: -3rem;margin-left: 8rem;">
+  <p class="no-padding">
+    <span style="display: inline-block;transform: rotate(45deg);">👈</span> me!
+  </p>
+</GlassCard>
 
-    <h1 class="name-title">Lewis Torrington</h1>
+<h1 class="name-title">Lewis Torrington</h1>
 
-    <p class="p-over-pure-black">
-      Hello, my name is Lewis and this is my page.
-      I've got an about-me section and a contact section - 
-      and in this iteration of my site, I'm focusing entirely 
-      mobile-first because my (from-scratch) statistics 
-      tell me that literally everyone who visited here 
-      has been on a phone!
-    </p>
-  </div>
-</SwipeWrapper>
+<p class="p-over-pure-black">
+  Hello, my name is Lewis and this is my page.
+  I've got an about-me section and a contact section - 
+  and in this iteration of my site, I'm focusing entirely 
+  mobile-first because my (from-scratch) statistics 
+  tell me that literally everyone who visited here 
+  has been on a phone!
+</p>
+
+<BottomNav leftLink={null} rightLink={rightLink} />
 
 <style>
   .name-title {

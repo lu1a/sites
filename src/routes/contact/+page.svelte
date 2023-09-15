@@ -42,7 +42,7 @@
       <br />
       <br />
 
-      <button type="submit">Send Message</button>
+      <button class="contact-CTA" type="submit">Send Message</button>
     </form>
   
     {#if responseMessage}
@@ -52,12 +52,6 @@
 </SwipeWrapper>
 
 <style>
-  /* hr {
-    height: 1px;
-    border: none;
-    background-color: rgb(91 91 91);
-  } */
-
   .input {
     width: 14rem;
     font-family: helvetica;
@@ -67,5 +61,17 @@
 
     background-color: rgb(50,50,50);
     color: white;
+  }
+
+  .contact-CTA {
+    background-color: rgb(0 37 51);
+    border: none;
+    width: 10rem;
+    height: 3rem;
+    color: rgb(2 183 255);
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 1rem;
+    font-family: system-ui;
   }
 </style>

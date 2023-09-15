@@ -24,9 +24,13 @@
 
     color: white;
     text-shadow: 0 0 10px #fff, 0 0 21px #fff;
+
+    /* view-transition-name: left-arrow; */
   }
 
   .right {
     right: 10%;
+
+    /* view-transition-name: right-arrow; */
   }
 </style>

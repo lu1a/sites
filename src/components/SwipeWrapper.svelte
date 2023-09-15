@@ -1,8 +1,22 @@
 <script lang="ts">
+  import { onNavigate } from '$app/navigation';
   import Arrow from "./Arrow.svelte";
 
   export let rightLink: string | null;
   export let leftLink: string | null;
+
+  onNavigate((navigation) => {
+    //@ts-ignore
+    if (!document.startViewTransition) return;
+
+    return new Promise((resolve) => {
+      //@ts-ignore
+      document.startViewTransition(async () => {
+        resolve();
+        await navigation.complete;
+      });
+    });
+  });
 </script>
   
 <div class="fullscreen-wrapper">

@@ -1,13 +1,13 @@
 <div class="content-wrapper">
     <slot />
-  </div>
+</div>
   
-  <style>
-    .content-wrapper {
-      overflow: hidden;
-  
-      margin: auto;
-      padding: 2rem;
-      max-width: 30rem;
-    }
-  </style>
+<style>
+  .content-wrapper {
+    overflow: hidden;
+
+    margin: auto;
+    padding: 2rem;
+    max-width: 30rem;
+  }
+</style>

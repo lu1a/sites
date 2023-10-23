@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" href="%sveltekit.assets%/favicon.ico" />
+		<meta name="viewport" content="width=device-width" />
+    <style global>
+      body {
+        background-color: black;
+        color: white;
+        font-family: helvetica;
+        font-weight: 300;
+        margin: 0;
+      }
+
+      body h1 {
+        font-weight: 100;
+        margin-top: 0;
+      }
+    </style>
+	</head>
+	<body data-sveltekit-preload-data="hover">
+		<div style="display: contents">
+
+            <div class="content-wrapper">
+                
+                <img
+                    class="image-card image-headshot"
+                    src="/static/images/lewis-headshot.png"
+                    alt="A headshot of me"
+                />
+                
+                <div class="glass-card" style="margin-top: -3rem;margin-left: 8rem; animation-duration: 2s;">
+                    <p class="no-padding">
+                    <span style="display: inline-block;transform: rotate(45deg);">👈</span> me!
+                    </p>
+                </div>
+                
+                <h1 class="name-title">Lewis Torrington</h1>
+                
+                <p class="p-over-pure-black">
+                    Hello, my name is Lewis and this is my page.
+                    I've got an about-me section and a contact section - 
+                    and in this iteration of my site, I'm focusing entirely 
+                    mobile-first because my (from-scratch) statistics 
+                    tell me that literally everyone who visited here 
+                    has been on a phone!
+                </p>
+                
+                <div class="nav-wrapper">
+                    <a class="arrow left" href="">
+                        ← Back
+                    </a>
+                    <a class="arrow right" href="/about">
+                        Next →
+                    </a>
+                </div>
+
+            </div>
+
+            <style>
+                .content-wrapper {
+                    overflow: hidden;
+                
+                    margin: auto;
+                    padding: 2rem;
+                    max-width: 30rem;
+                }
+                .name-title {
+                    font-size: 4rem;
+                
+                    margin: 0;
+                }
+                
+                .image-card {
+                    border-radius: 50%;
+                }
+                
+                .image-headshot {
+                    width: 10rem;
+                    height: 10rem;
+                }
+                
+                .p-over-pure-black {
+                    color: rgb(132 132 135);
+                    font-size: 1.2rem;
+                }
+                
+                .no-padding {
+                    margin: 0;
+                }
+
+                .nav-wrapper {
+                    overflow: hidden;
+                    width: 100%;
+                    height: 100%;
+                }
+
+                .arrow {
+                    position: absolute;
+                    top: 90%;
+                    z-index: 1;
+
+                    font-size: 1.2rem;
+                    color: white;
+                    text-decoration: none;
+                    text-shadow: 0 0 10px #fff, 0 0 21px #fff;
+                }
+
+                .left {
+                    left: 10%;
+
+                    color: white;
+                    text-shadow: 0 0 10px #fff, 0 0 21px #fff;
+
+                    /* view-transition-name: left-arrow; */
+                }
+
+                .right {
+                    right: 10%;
+
+                    /* view-transition-name: right-arrow; */
+                }
+
+                .glass-card {
+                    z-index: 1;
+                    width: fit-content;
+
+                    background: rgba(255, 255, 255, 0.2);
+                    border-radius: 16px;
+                    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+                    backdrop-filter: blur(5px);
+                    -webkit-backdrop-filter: blur(5px);
+                    border: 1px solid rgba(255, 255, 255, 0.3);
+
+                    padding: 1rem;
+
+                    animation: moveTopBottom ease-in-out infinite alternate;
+                }
+
+                @keyframes moveTopBottom {
+                    0%, 100% {
+                        transform: translate(0%, 0%);
+                    }
+                    50% {
+                        transform: translate(0%, 7%);
+                    }
+                }
+            </style>
+
+        </div>
+	</body>
+</html>

@@ -1,6 +1,6 @@
 import Image from 'next/image';
-import GlassCard from './components/GlassCard';
-import BottomNav from './components/BottomNav';
+import GlassCard from '../components/GlassCard';
+import BottomNav from '../components/BottomNav';
 
 export default function Home() {
   const rightLink = "/about";
@@ -28,7 +28,7 @@ export default function Home() {
         Hello, my name is Lewis and this is my page.
         I&apos;ve got an about-me section and a data section - 
         and in this iteration of my site, I&apos;m focusing entirely 
-        mobile-first because my (from-scratch) statistics 
+        mobile-first because my stats
         tell me that almost every non-bot who visited here 
         has been on a phone!
       </p>

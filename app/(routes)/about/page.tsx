@@ -14,7 +14,7 @@ export default function About() {
           <li>
           BCompSc (m.: Cyber Security),&nbsp;
           <a
-            style={{color: "white"}}
+            className="underline"
             href="https://www.uow.edu.au/"
             target="_blank"
             >UoW</a>, 2016-2018.
@@ -22,7 +22,7 @@ export default function About() {
           <li>
           Working at&nbsp;
           <a
-            style={{color: "white"}}
+            className="underline"
             href="https://www.upcloud.com/"
             target="_blank"
             >UpCloud</a>.
@@ -39,7 +39,7 @@ export default function About() {
         <p>
           Instead of a CV, just go look at my&nbsp;
           <a
-            style={{color: "white"}}
+            className="underline"
             href="https://www.linkedin.com/in/lewis-torrington/"
             target="_blank"
           >
@@ -48,7 +48,7 @@ export default function About() {
           <br />
           Ping me if you want me to contribute to your git project!
           (<a
-            style={{color: "white"}}
+            className="underline"
             href="https://github.com/lu1a"
             target="_blank"
           >

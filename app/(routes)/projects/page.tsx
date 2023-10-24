@@ -14,6 +14,7 @@ export default function Projects() {
       <GreyCard>
         <p className="m-0">
           <Link
+            className="underline"
             href="https://github.com/lu1a/cosmas-api"
             target="_blank"
           >
@@ -30,6 +31,7 @@ export default function Projects() {
       <GreyCard>
         <p className="m-0">
           <Link
+            className="underline"
             href="https://github.com/lu1a/kasu"
             target="_blank"
           >

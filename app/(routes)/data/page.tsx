@@ -12,7 +12,7 @@ export default function Data() {
       <GreyCard>
         <p className="m-0">This site was written in NextJS by me.<br />You can find the&nbsp;
           <a
-            style={{color: "white"}}
+            className="underline"
             href="https://github.com/lu1a/portfolio-site"
             target="_blank"
           >

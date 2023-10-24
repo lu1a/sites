@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Doughnut } from "react-chartjs-2";
+// import { Doughnut } from "react-chartjs-2";
 
 export default function VisitorsGraph() {
     const [chartData, setChartData] = useState({});
@@ -94,7 +94,7 @@ export default function VisitorsGraph() {
   return (
     <div>
       {/* @ts-ignore */}
-      {chartData && <Doughnut data={chartData} options={options} />}
+      {/* {chartData && <Doughnut data={chartData} options={options} />} */}
     </div>
   );
 };

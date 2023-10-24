@@ -12,7 +12,7 @@ export default function VisitorsGraph() {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer D3oDGQEpCbWitv1mYRZqqGm70qYbRdadMmYzuFVx7rrVJmIV8YXgmpC53oQNLjla`,
+          'Authorization': `Bearer`,
         },
         mode: 'no-cors',
       });

@@ -1,5 +1,5 @@
 {
-  "name": "next-port",
+  "name": "portfolio-site",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -9,7 +9,6 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "chart.js": "^4.4.0",
     "next": "13.5.6",
     "react": "^18",
     "react-chartjs-2": "^5.2.0",

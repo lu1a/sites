@@ -25,6 +25,11 @@ export default function Data() {
         </p>
       </GreyCard>
 
+      <br />
+
+      <p className="m-0 text-gray-400 text-lg">
+        <i>// TODO: link here to a beautiful grafana page about my website stats!</i></p>
+
       {/* <div>
         <div style={{width: "300px"}}>
           <VisitorsGraph />

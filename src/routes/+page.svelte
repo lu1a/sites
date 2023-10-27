@@ -15,7 +15,7 @@
     <div class="animate-bounce" style="margin-top: -3rem; margin-left: 8rem;">
         <GlassCard>
             <p class="m-0">
-                <span style={{display: "inline-block", transform: "rotate(45deg)"}}>👈</span> me!
+                <span style="display: inline-block; transform: rotate(45deg);">👈</span> me!
             </p>
         </GlassCard>
     </div>

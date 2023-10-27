@@ -7,11 +7,12 @@ ENV NEXT_TELEMETRY_DISABLED 1
 COPY package*.json ./
 RUN npm ci
 
-COPY next.config.js postcss.config.js tailwind.config.ts tsconfig.json ./
-COPY public ./public
-COPY app ./app
+COPY svelte.config.js postcss.config.js tailwind.config.js vite.config.js ./
+COPY static ./static
+COPY src ./src
 
 RUN npm run build
 
 EXPOSE 3000
-CMD npm run start
+
+CMD node build

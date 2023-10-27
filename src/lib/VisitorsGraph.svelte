@@ -1,4 +1,4 @@
-"use client";
+<!-- "use client";
 
 import { useEffect, useState } from "react";
 // import { Doughnut } from "react-chartjs-2";
@@ -97,4 +97,4 @@ export default function VisitorsGraph() {
       {/* {chartData && <Doughnut data={chartData} options={options} />} */}
     </div>
   );
-};
+}; -->

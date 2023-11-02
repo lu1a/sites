@@ -24,8 +24,7 @@
 
     <p class="text-gray-400 text-lg mt-5">
         Hello, my name is Lewis and this is my page.
-        I&apos;ve got an about-me section and a data section - 
-        and in this iteration of my site, I&apos;m focusing entirely 
+        In this iteration of my site, I&apos;m focusing entirely 
         mobile-first because my stats
         tell me that almost every non-bot who visited here 
         has been on a phone!

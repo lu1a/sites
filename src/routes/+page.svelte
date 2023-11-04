@@ -5,6 +5,10 @@
     let rightLink = "/about";
 </script>
 
+<svelte:head>
+  <title>Lewis' portfolio site: home</title> 
+</svelte:head>
+
 <main class="overflow-hidden mx-auto p-8 max-w-xl">
   <img
     class="rounded-full m-0 w-40 h-40"

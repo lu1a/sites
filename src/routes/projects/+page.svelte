@@ -6,6 +6,10 @@
     const leftLink = "/about";
 </script>
 
+<svelte:head>
+  <title>Lewis' portfolio site: projects</title> 
+</svelte:head>
+
 <div class="overflow-hidden mx-auto p-8 max-w-xl">
   <header>
     <h1 class="text-3xl">Some projects</h1>

@@ -6,10 +6,12 @@
     const leftLink = "/about";
 </script>
 
-<main class="overflow-hidden mx-auto p-8 max-w-xl">
+<div class="overflow-hidden mx-auto p-8 max-w-xl">
+  <header>
     <h1 class="text-3xl">Some projects</h1>
-    <br />
-
+  </header>
+  <br />
+  <main>
     <GreyCard>
       <p class="m-0">
         <a
@@ -48,5 +50,8 @@
       <i>...and more! Though not that much more that I wanna show publicly.
       Check out my GitHub anyhow if you&apos;re interested.</i></p>
 
+  </main>
+  <footer>
     <BottomNav leftLink={leftLink} rightLink={rightLink} />
-</main>
+  </footer>
+</div>

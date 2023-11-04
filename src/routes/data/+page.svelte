@@ -6,9 +6,12 @@
     let leftLink = "/projects";
 </script>
 
-<main class="overflow-hidden mx-auto p-8 max-w-xl">
+<div class="overflow-hidden mx-auto p-8 max-w-xl">
+  <header>
     <h1 class="text-3xl">Data</h1>
-    <br />
+  </header>
+  <br />
+  <main>
     <GreyCard>
       <p class="m-0">This site was written in Svelte by me.<br />You can find the&nbsp;
         <a
@@ -36,6 +39,8 @@
       </div>
       <p class="m-0 text-gray-400 text-lg">Countries of unique visitors to this site<br />(via my Golang API → <s>Kafka</s> → Timescale)</p>
     </div> -->
-
+  </main>
+  <footer>
     <BottomNav leftLink={leftLink} rightLink={rightLink} />
-</main>
+  </footer>
+</div>

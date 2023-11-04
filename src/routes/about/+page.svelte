@@ -6,9 +6,12 @@
     const leftLink = "/";
 </script>
 
-<main class="overflow-hidden mx-auto p-8 max-w-xl">
+<div class="overflow-hidden mx-auto p-8 max-w-xl">
+  <header>
     <h1 class="text-3xl">About me</h1>
-    <br />
+  </header>
+  <br />
+  <main>
     <GreyCard>
       <ul class="list-none">
         <li>From Australia; living in Finland since 2019.</li>
@@ -56,6 +59,8 @@
           My GitHub</a>.)
       </p>
     </GreyCard>
-
+  </main>
+  <footer>
     <BottomNav leftLink={leftLink} rightLink={rightLink} />
-</main>
+  </footer>
+</div>

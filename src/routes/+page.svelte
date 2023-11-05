@@ -8,7 +8,7 @@
   <title>Lewis' portfolio site</title> 
 </svelte:head>
 
-<main class="overflow-hidden mx-auto p-8 max-w-xl">
+<main class="overflow-hidden mx-auto p-8 max-w-2xl">
   <img
     class="rounded-full m-0 w-40 h-40"
     src="/lewis-headshot.png"
@@ -28,7 +28,16 @@
   <article>
     <h1 class="text-6xl m-0">Lewis Torrington</h1>
 
-    <p class="text-gray-400 text-lg mt-5">
+    <p class="text-gray-400 text-lg mt-5 hidden">
+      This is an audio-only test intro for anyone listening.
+      Hello, my name is Lewis and this is my page.
+      In this iteration of my site, I&apos;m focusing entirely 
+      mobile-first because my stats
+      tell me that almost every non-bot who visited here 
+      has been on a phone!
+    </p>
+
+    <p class="text-gray-400 text-lg mt-5" aria-hidden="true">
         Hello, my name is Lewis and this is my page.
         In this iteration of my site, I&apos;m focusing entirely 
         mobile-first because my stats

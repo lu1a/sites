@@ -2,6 +2,7 @@
 	import GlassCard from "../lib/GlassCard.svelte";
 	import GreyCard from "../lib/GreyCard.svelte";
 
+  let fakeVariable = true;
 </script>
 
 <svelte:head>
@@ -28,21 +29,17 @@
   <article>
     <h1 class="text-6xl m-0">Lewis Torrington</h1>
 
-    <p class="text-gray-400 text-lg mt-5 hidden">
-      This is an audio-only test intro for anyone listening.
+    <p class="text-gray-400 text-lg mt-5 sr-only">
       Hello, my name is Lewis and this is my page.
-      In this iteration of my site, I&apos;m focusing entirely 
-      mobile-first because my stats
-      tell me that almost every non-bot who visited here 
-      has been on a phone!
+      There's a picture of me shown -&nbsp;
+      a portrait headshot of my plucky, pasty-white self standing
+      in front of a snowy background.
     </p>
 
     <p class="text-gray-400 text-lg mt-5" aria-hidden="true">
         Hello, my name is Lewis and this is my page.
-        In this iteration of my site, I&apos;m focusing entirely 
-        mobile-first because my stats
-        tell me that almost every non-bot who visited here 
-        has been on a phone!
+        In this iteration of my site, I&apos;m focusing
+        on accessibility and utilitarianism.
     </p>
 
     <br /><br /><br />

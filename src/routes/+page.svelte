@@ -1,8 +1,6 @@
 <script>
-	import GlassCard from "../lib/GlassCard.svelte";
 	import GreyCard from "../lib/GreyCard.svelte";
 
-  let fakeVariable = true;
 </script>
 
 <svelte:head>
@@ -17,26 +15,17 @@
     aria-hidden="true"
   />
 
-  <aside class="animate-bounce" style="margin-top: -3rem; margin-left: 8rem;" aria-hidden="true">
-    <GlassCard>
-      <p class="m-0">
-        <span style="display: inline-block; transform: rotate(45deg);">👈</span>
-        &nbsp;me!
-      </p>
-    </GlassCard>
-  </aside>
-
   <article>
     <h1 class="text-6xl m-0">Lewis Torrington</h1>
 
-    <p class="text-gray-400 text-lg mt-5 sr-only">
+    <p class="sr-only">
       Hello, my name is Lewis and this is my page.
       There's a picture of me shown -&nbsp;
       a portrait headshot of my plucky, pasty-white self standing
       in front of a snowy background.
     </p>
 
-    <p class="text-gray-400 text-lg mt-5" aria-hidden="true">
+    <p class="dark:text-gray-400 text-lg mt-5" aria-hidden="true">
         Hello, my name is Lewis and this is my page.
         In this iteration of my site, I&apos;m focusing
         on accessibility and utilitarianism.
@@ -132,7 +121,7 @@
     </GreyCard>
     <br />
 
-    <p class="m-0 text-gray-400 text-lg">
+    <p class="m-0 dark:text-gray-400 text-lg">
       <i>...and more! Though not that much more that I wanna show publicly.
       Check out my GitHub anyhow if you&apos;re interested.</i></p>
 
@@ -158,14 +147,12 @@
 
     <br />
 
-    <p class="m-0 text-gray-400 text-lg">
+    <p class="m-0 dark:text-gray-400 text-lg">
       <i>// TODO: link here to a beautiful grafana page about my website stats!</i></p>
-
 
     <div class="flex justify-center mt-48">
       <a href="https://www.linkedin.com/in/lewis-torrington/">
-        <button class="animate-ping absolute inline-flex w-52 h-16 rounded-full bg-blue-600 opacity-60" aria-hidden="true"></button>
-        <button class="bg-blue-700 w-52 h-16 text-blue-300 rounded-md font-semibold text-2xl font-sans">
+        <button class="bg-blue-500 text-blue-100 dark:bg-blue-700 dark:text-blue-300 w-52 h-16 rounded-md font-semibold text-2xl font-sans">
           <span>Get in touch</span>
         </button>
       </a>

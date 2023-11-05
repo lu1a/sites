@@ -1,4 +1,4 @@
-<div class="bg-gray-800 border-gray-800 rounded-xl p-4">
+<div class="dark:bg-gray-800 dark:border-gray-800 dark:rounded-xl dark:p-4">
   <slot />
 </div>
   

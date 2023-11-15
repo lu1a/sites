@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="/static/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="/static/index.css" rel="stylesheet" />
+
+    <title>Stats | Lewis' portfolio site</title>
+  </head>
+
+  <body
+    class="bg-stone-100 dark:bg-neutral-900 dark:text-white font-helvetica dark:font-light m-0"
+  >
+    <main class="overflow-hidden mx-auto p-8 max-w-2xl">
+      <a href="/">← Back to homepage</a>
+      <br />
+      <br />
+      <article>
+        <h1 class="text-6xl m-0">Portfolio website stats</h1>
+        <br />
+        <div>
+          <table class="table-auto border-collapse text-left dark:font-light">
+            <thead>
+              <tr>
+                <th scope="col" class="text-2xl font-light pr-3">Country</th>
+                <th scope="col" class="text-2xl font-light">Unique IP Count</th>
+              </tr>
+            </thead>
+            <tbody>
+              {{range .CountryCounts}}
+              <tr class="">
+                <td class="dark:text-gray-400 text-lg whitespace-nowrap pr-3">{{.Country}}</td>
+                <td class="dark:text-gray-400 text-lg whitespace-nowrap">{{.IPCount}}</td>
+              </tr>
+              {{end}}
+            </tbody>
+          </table>
+        </div>
+      </article>
+    </main>
+  </body>
+</html>

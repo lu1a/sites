@@ -1,167 +1,186 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <link rel="icon" href="/static/favicon.ico" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link href="/static/index.css" rel="stylesheet">
-  
-  <title>Lewis' portfolio site</title> 
-</head>
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="/static/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="/static/index.css" rel="stylesheet" />
 
-<body class="bg-stone-100 dark:bg-black dark:text-white font-helvetica dark:font-light m-0">
-<main class="overflow-hidden mx-auto p-8 max-w-2xl">
-  <img
-    class="rounded-full m-0 w-40 h-40"
-    src="/static/lewis-headshot.png"
-    alt="A headshot of Lewis"
-    aria-hidden="true"
-  />
+    <title>Lewis' portfolio site</title>
+  </head>
 
-  <article>
-    <h1 class="text-6xl m-0">Lewis Torrington</h1>
+  <body
+    class="bg-stone-100 dark:bg-black dark:text-white font-helvetica dark:font-light m-0"
+  >
+    <main class="overflow-hidden mx-auto p-8 max-w-2xl">
+      <img
+        class="rounded-full m-0 w-40 h-40"
+        src="/static/lewis-headshot.png"
+        alt="A headshot of Lewis"
+        aria-hidden="true"
+      />
 
-    <p class="sr-only">
-      Hello, my name is Lewis and this is my page.
-      There's a picture of me shown -&nbsp;
-      a portrait headshot of my plucky, pasty-white self standing
-      in front of a snowy background.
-    </p>
+      <article>
+        <h1 class="text-6xl m-0">Lewis Torrington</h1>
 
-    <p class="dark:text-gray-400 text-lg mt-5" aria-hidden="true">
-        Hello, my name is Lewis and this is my page.
-        In this iteration of my site, I&apos;m focusing
-        on accessibility and utilitarianism.
-    </p>
+        <p class="sr-only">
+          Hello, my name is Lewis and this is my page. There's a picture of me
+          shown -&nbsp; a portrait headshot of my plucky, pasty-white self
+          standing in front of a snowy background.
+        </p>
 
-    <br /><br /><br />
+        <p class="dark:text-gray-400 text-lg mt-5" aria-hidden="true">
+          Hello, my name is Lewis and this is my page. In this iteration of my
+          site, I&apos;m focusing on accessibility and utilitarianism.
+        </p>
 
-    <h2 class="text-3xl">About me</h2>
-    <br />
-    <div class="dark:bg-gray-800 dark:border-gray-800 dark:rounded-xl dark:p-4">
-      <ul class="list-none">
-        <li>From Australia; living in Finland since 2019.</li>
-        <li>
-          Working at&nbsp;
-          <a
-            class="underline"
-            href="https://www.upcloud.com/"
-            target="_blank"
-            >UpCloud</a>.
-        </li>
-        <li>Software engineer:</li>
-        <ul class="list-disc ml-4">
-          <li>Specialties: cloud backend, data engineering</li>
-          <li>Best langs right now: Go, Python, JS/TS</li>
-          <li>Getting better at: data science, k8s</li>
-        </ul>
-        <li class="mt-2">
-        BCompSc (m.: Cyber Security),&nbsp;
-        <a
-          class="underline"
-          href="https://www.uow.edu.au/"
-          target="_blank"
-          >UoW</a>, 2016-2018.
-        </li>
-      </ul>
-    </div>
-    <br />
-    <div class="dark:bg-gray-800 dark:border-gray-800 dark:rounded-xl dark:p-4">
-      <p>
-        Instead of a CV, just go look at my&nbsp;
-        <a
-          class="underline"
-          href="https://www.linkedin.com/in/lewis-torrington/"
-          target="_blank"
-        >
-          LinkedIn</a>. 😇
+        <br /><br /><br />
+
+        <h2 class="text-3xl">About me</h2>
         <br />
-        Ping me if you want me to contribute to your git project!
-        (<a
-          class="underline"
-          href="https://github.com/lu1a"
-          target="_blank"
+        <div
+          class="dark:bg-gray-800 dark:border-gray-800 dark:rounded-xl dark:p-4"
         >
-          My GitHub</a>.)
-      </p>
-    </div>
-
-    <br /><br /><br />
-
-    <h2 class="text-3xl">Some projects</h2>
-    <br />
-    <div class="dark:bg-gray-800 dark:border-gray-800 dark:rounded-xl dark:p-4">
-      <p class="m-0">
-        <a
-          class="underline"
-          href="https://github.com/lu1a/cosmas-api"
-          target="_blank"
+          <ul class="list-none">
+            <li>From Australia; living in Finland since 2019.</li>
+            <li>
+              Working at&nbsp;
+              <a
+                class="underline"
+                href="https://www.upcloud.com/"
+                target="_blank"
+                >UpCloud</a
+              >.
+            </li>
+            <li>Software engineer:</li>
+            <ul class="list-disc ml-4">
+              <li>Specialties: cloud backend, data engineering</li>
+              <li>Best langs right now: Go, Python, JS/TS</li>
+              <li>Getting better at: data science, k8s</li>
+            </ul>
+            <li class="mt-2">
+              BCompSc (m.: Cyber Security),&nbsp;
+              <a
+                class="underline"
+                href="https://www.uow.edu.au/"
+                target="_blank"
+                >UoW</a
+              >, 2016-2018.
+            </li>
+          </ul>
+        </div>
+        <br />
+        <div
+          class="dark:bg-gray-800 dark:border-gray-800 dark:rounded-xl dark:p-4"
         >
-          COSMAS
-        </a>
-        <br />
-        An API in Rust to allow for an automated social peer-to-peer sharing system.
-        <br />
-        Designed for my future farm in mind. 🧑‍🌾🌾
-      </p>
-    </div>
-    <br />
+          <p>
+            Instead of a CV, just go look at my&nbsp;
+            <a
+              class="underline"
+              href="https://www.linkedin.com/in/lewis-torrington/"
+              target="_blank"
+            >
+              LinkedIn</a
+            >. 😇
+            <br />
+            Ping me if you want me to contribute to your git project! (<a
+              class="underline"
+              href="https://github.com/lu1a"
+              target="_blank"
+            >
+              My GitHub</a
+            >.)
+          </p>
+        </div>
 
-    <div class="dark:bg-gray-800 dark:border-gray-800 dark:rounded-xl dark:p-4">
-      <p class="m-0">
-        <a
-          class="underline"
-          href="https://github.com/lu1a/kasu"
-          target="_blank"
+        <br /><br /><br />
+
+        <h2 class="text-3xl">Some projects</h2>
+        <br />
+        <div
+          class="dark:bg-gray-800 dark:border-gray-800 dark:rounded-xl dark:p-4"
         >
-          KASU
-        </a>
+          <p class="m-0">
+            <a
+              class="underline"
+              href="https://github.com/lu1a/cosmas-api"
+              target="_blank"
+            >
+              COSMAS
+            </a>
+            <br />
+            An API in Rust to allow for an automated social peer-to-peer sharing
+            system.
+            <br />
+            Designed for my future farm in mind. 🧑‍🌾🌾
+          </p>
+        </div>
         <br />
-        A little script for installing Kubernetes on a blank Ubuntu machine!
-        <br />
-        Either for becoming a control plane or worker node.
-      </p>
-    </div>
-    <br />
 
-    <p class="m-0 dark:text-gray-400 text-lg">
-      <i>...and more! Though not that much more that I wanna show publicly.
-      Check out my GitHub anyhow if you&apos;re interested.</i></p>
-
-    <br /><br /><br />
-
-    <h2 class="text-3xl">Data</h2>
-    <br />
-    <div class="dark:bg-gray-800 dark:border-gray-800 dark:rounded-xl dark:p-4">
-      <p class="m-0">This site was written in Svelte by me.<br />You can find the&nbsp;
-        <a
-          class="underline"
-          href="https://github.com/lu1a/portfolio-site"
-          target="_blank"
+        <div
+          class="dark:bg-gray-800 dark:border-gray-800 dark:rounded-xl dark:p-4"
         >
-          source code
-        </a>
-        &nbsp;on my GitHub.<br />As you&apos;ll be able to see there, I have no code for
-        cookies or nasty things - though I do log my visitors to a TimeScale instance for fun.
-        The only fruitful thing that&apos;s gotten me so far is the knowledge of how many
-        US-based bots there are out there.
-      </p>
-    </div>
+          <p class="m-0">
+            <a
+              class="underline"
+              href="https://github.com/lu1a/kasu"
+              target="_blank"
+            >
+              KASU
+            </a>
+            <br />
+            A little script for installing Kubernetes on a blank Ubuntu machine!
+            <br />
+            Either for becoming a control plane or worker node.
+          </p>
+        </div>
+        <br />
 
-    <br />
+        <p class="m-0 dark:text-gray-400 text-lg">
+          <i
+            >...and more! Though not that much more that I wanna show publicly.
+            Check out my GitHub anyhow if you&apos;re interested.</i
+          >
+        </p>
 
-    <p class="m-0 dark:text-gray-400 text-lg">
-      <i>// TODO: link here to a beautiful grafana page about my website stats!</i></p>
+        <br /><br /><br />
 
-    <div class="flex justify-center mt-48">
-      <a href="https://www.linkedin.com/in/lewis-torrington/">
-        <button class="bg-blue-500 text-blue-100 dark:bg-blue-700 dark:text-blue-300 w-52 h-16 rounded-md font-semibold text-2xl font-sans">
-          <span>Get in touch</span>
-        </button>
-      </a>
-    </div>
+        <h2 class="text-3xl">Data</h2>
+        <br />
+        <div
+          class="dark:bg-gray-800 dark:border-gray-800 dark:rounded-xl dark:p-4"
+        >
+          <p class="m-0">
+            This site was written in Svelte by me.<br />You can find the&nbsp;
+            <a
+              class="underline"
+              href="https://github.com/lu1a/portfolio-site"
+              target="_blank"
+            >
+              source code
+            </a>
+            &nbsp;on my GitHub.<br />As you&apos;ll be able to see there, I have
+            no code for cookies or nasty things - though I do log my visitors to
+            a TimeScale instance for fun. The only fruitful thing that&apos;s
+            gotten me so far is the knowledge of how many US-based bots there
+            are out there.
+          </p>
+        </div>
 
-  </article>
-</main>
-</body>
+        <br />
+
+        <a class="dark:text-gray-300" href="/stats">See some stats on everyone who's visited →</a>
+
+        <div class="flex justify-center mt-48">
+          <a href="https://www.linkedin.com/in/lewis-torrington/">
+            <button
+              class="bg-blue-500 text-blue-100 dark:bg-blue-700 dark:text-blue-300 w-52 h-16 rounded-md font-semibold text-2xl font-sans"
+            >
+              <span>Get in touch</span>
+            </button>
+          </a>
+        </div>
+      </article>
+    </main>
+  </body>
 </html>

@@ -9,6 +9,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
 	"github.com/lu1a/portfolio-site/pages"
 	"github.com/lu1a/portfolio-site/types"
@@ -25,7 +26,7 @@ type Service struct {
 	closeDependencies func()
 	closeErr          error
 
-	// db  *sqlx.DB
+	db  *sqlx.DB
 	API *http.Server
 }
 
@@ -46,9 +47,9 @@ func (s *Service) Start() (context.Context, error) {
 		return err
 	}
 
-	// if err := s.initDatabase(); err != nil {
-	// 	return nil, startError(err)
-	// }
+	if err := s.initDatabase(); err != nil {
+		return nil, startError(err)
+	}
 	if err := s.startAPI(); err != nil {
 		return nil, startError(err)
 	}
@@ -56,20 +57,21 @@ func (s *Service) Start() (context.Context, error) {
 	return closeCtx, nil
 }
 
-// func (s *Service) initDatabase() (err error) {
-// 	s.db, err = sqlx.Connect("postgres", s.config.DBConnectionURL)
-// 	if err != nil {
-// 		return err
-// 	}
-// 	return nil
-// }
+func (s *Service) initDatabase() (err error) {
+	s.db, err = sqlx.Connect("postgres", s.config.DBConnectionURL)
+	if err != nil {
+		return err
+	}
+	return nil
+}
 
 func (s *Service) startAPI() (err error) {
 	log.Info("Starting server..")
 
 	r := chi.NewRouter()
 
-	r.Route("/", pages.PageRouter(s.log, s.config, r))
+	r.Route("/", pages.HomepageHandler(s.log, s.config, r))
+	r.Route("/stats", pages.PortfolioStatsHandler(s.log, s.db, s.config, r))
 
 	fs := http.FileServer(http.Dir("./static"))
 	r.Handle("/static/*", http.StripPrefix("/static/", fs))
@@ -126,11 +128,11 @@ func (s *Service) Close() error {
 			s.API = nil
 		}
 
-		// if s.db != nil {
-		// 	s.log.Info("Closing DB connection")
-		// 	s.db.Close()
-		// 	s.db = nil
-		// }
+		if s.db != nil {
+			s.log.Info("Closing DB connection")
+			s.db.Close()
+			s.db = nil
+		}
 
 		s.closeDependencies()
 

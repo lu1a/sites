@@ -1,6 +1,4 @@
 <script>
-	import GreyCard from "../lib/GreyCard.svelte";
-
 </script>
 
 <svelte:head>
@@ -35,7 +33,7 @@
 
     <h2 class="text-3xl">About me</h2>
     <br />
-    <GreyCard>
+    <div class="dark:bg-gray-800 dark:border-gray-800 dark:rounded-xl dark:p-4">
       <ul class="list-none">
         <li>From Australia; living in Finland since 2019.</li>
         <li>
@@ -61,9 +59,9 @@
           >UoW</a>, 2016-2018.
         </li>
       </ul>
-    </GreyCard>
+    </div>
     <br />
-    <GreyCard>
+    <div class="dark:bg-gray-800 dark:border-gray-800 dark:rounded-xl dark:p-4">
       <p>
         Instead of a CV, just go look at my&nbsp;
         <a
@@ -81,13 +79,13 @@
         >
           My GitHub</a>.)
       </p>
-    </GreyCard>
+    </div>
 
     <br /><br /><br />
 
     <h2 class="text-3xl">Some projects</h2>
     <br />
-    <GreyCard>
+    <div class="dark:bg-gray-800 dark:border-gray-800 dark:rounded-xl dark:p-4">
       <p class="m-0">
         <a
           class="underline"
@@ -101,10 +99,10 @@
         <br />
         Designed for my future farm in mind. 🧑‍🌾🌾
       </p>
-    </GreyCard>
+    </div>
     <br />
 
-    <GreyCard>
+    <div class="dark:bg-gray-800 dark:border-gray-800 dark:rounded-xl dark:p-4">
       <p class="m-0">
         <a
           class="underline"
@@ -118,7 +116,7 @@
         <br />
         Either for becoming a control plane or worker node.
       </p>
-    </GreyCard>
+    </div>
     <br />
 
     <p class="m-0 dark:text-gray-400 text-lg">
@@ -129,7 +127,7 @@
 
     <h2 class="text-3xl">Data</h2>
     <br />
-    <GreyCard>
+    <div class="dark:bg-gray-800 dark:border-gray-800 dark:rounded-xl dark:p-4">
       <p class="m-0">This site was written in Svelte by me.<br />You can find the&nbsp;
         <a
           class="underline"
@@ -143,7 +141,7 @@
         The only fruitful thing that&apos;s gotten me so far is the knowledge of how many
         US-based bots there are out there.
       </p>
-    </GreyCard>
+    </div>
 
     <br />
 

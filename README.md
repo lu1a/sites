@@ -1,3 +1,5 @@
-## portfolio site
+# Portfolio site
 
-The latest and greatest version of my portfolio site, right now in svelte.
+This version is in Go.
+
+Note to self: don't forget to run `./tailwindcss -o ./static/index.css --minify` to build the index.css file.

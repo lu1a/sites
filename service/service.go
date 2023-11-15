@@ -81,13 +81,13 @@ func (s *Service) startAPI() (err error) {
 }
 
 func (s *Service) initHTTPServer(r *chi.Mux) (*http.Server, error) {
-	l, err := net.Listen("tcp", "localhost:3000")
+	l, err := net.Listen("tcp", "0.0.0.0:3000")
 	if err != nil {
 		return nil, fmt.Errorf("create tcp listener: %w", err)
 	}
 
 	serv := &http.Server{
-		Addr:    "localhost:3000",
+		Addr:    "0.0.0.0:3000",
 		Handler: r,
 	}
 

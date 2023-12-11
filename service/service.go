@@ -73,6 +73,9 @@ func (s *Service) startAPI() (err error) {
 	r.Route("/", pages.HomepageHandler(s.log, s.config, r))
 	r.Route("/stats", pages.PortfolioStatsHandler(s.log, s.db, s.config, r))
 
+	// TODO: handle this in a different app entirely
+	r.Route("/recycle-cloud-letter", pages.RecycleCloudLetterHandler(s.log, s.db, s.config, r))
+
 	fs := http.FileServer(http.Dir("./static"))
 	r.Handle("/static/*", http.StripPrefix("/static/", fs))
 

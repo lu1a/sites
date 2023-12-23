@@ -27,8 +27,6 @@ async fn main() {
     let db_connection_str = std::env::var("DB_CONNECTION_URL")
         .unwrap_or_else(|_| "postgres://postgres:password@localhost".to_string());
 
-    print!("{}", db_connection_str);
-
     // set up connection pool
     let pool = PgPoolOptions::new()
         .max_connections(5)
@@ -45,7 +43,7 @@ async fn main() {
         .with_state(pool);
 
     // run it
-    let listener = tokio::net::TcpListener::bind("127.0.0.1:3000")
+    let listener = tokio::net::TcpListener::bind("0.0.0.0:3000")
         .await
         .unwrap();
     tracing::debug!("listening on {}", listener.local_addr().unwrap());

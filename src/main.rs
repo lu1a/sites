@@ -68,7 +68,7 @@ async fn stats_handler(State(pool): State<PgPool>) -> impl IntoResponse {
         }
         Err(err) => {
             eprintln!("Error occurred: {}", err);
-            // Handle the error appropriately, like returning an error response
+            // todo: handle the error appropriately, like returning an error response
         }
     }
 

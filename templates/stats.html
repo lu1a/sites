@@ -31,16 +31,16 @@
               </tr>
             </thead>
             <tbody>
-              {{range .CountryCounts}}
+              {% for obj in unique_ips_by_country %}
               <tr class="">
                 <td class="dark:text-gray-400 text-lg whitespace-nowrap pr-3">
-                  {{.Country}}
+                  {{ obj.country }}
                 </td>
                 <td class="dark:text-gray-400 text-lg whitespace-nowrap">
-                  {{.IPCount}}
+                  {{ obj.count }}
                 </td>
               </tr>
-              {{end}}
+              {% endfor %}
             </tbody>
           </table>
         </div>

@@ -59,22 +59,12 @@ async fn index_handler() -> impl IntoResponse {
 #[template(path = "index.html")]
 struct IndexTemplate {}
 
-async fn stats_handler(State(pool): State<PgPool>) -> impl IntoResponse {
-    let mut unique_ips_by_country: Vec<db::CountryCount> = Vec::new();
-    
-    match db::get_unique_ips_by_country(&pool).await {
-        Ok(result) => {
-            unique_ips_by_country = result;
-        }
-        Err(err) => {
-            eprintln!("Error occurred: {}", err);
-            // TODO: handle the error appropriately, like returning an error response
-        }
-    }
+async fn stats_handler(State(pool): State<PgPool>) -> Result<impl IntoResponse, AppError> {
+    let unique_ips_by_country: Vec<db::CountryCount> = db::get_unique_ips_by_country(&pool).await?;
 
     let template = StatsTemplate { unique_ips_by_country };
 
-    HtmlTemplate(template)
+    Ok(HtmlTemplate(template))
 }
 
 #[derive(Template)]
@@ -98,5 +88,32 @@ where
             )
                 .into_response(),
         }
+    }
+}
+
+// Error handling
+
+// Make our own error that wraps `anyhow::Error`.
+struct AppError(anyhow::Error);
+
+// Tell axum how to convert `AppError` into a response.
+impl IntoResponse for AppError {
+    fn into_response(self) -> Response {
+        (
+            StatusCode::INTERNAL_SERVER_ERROR,
+            format!("Something went wrong: {}", self.0),
+        )
+            .into_response()
+    }
+}
+
+// This enables using `?` on functions that return `Result<_, anyhow::Error>` to turn them into
+// `Result<_, AppError>`. That way we don't need to do that manually.
+impl<E> From<E> for AppError
+where
+    E: Into<anyhow::Error>,
+{
+    fn from(err: E) -> Self {
+        Self(err.into())
     }
 }

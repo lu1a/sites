@@ -1,4 +1,4 @@
-use sqlx::{postgres::PgPool, Error};
+use sqlx::postgres::PgPool;
 use chrono::NaiveDateTime;
 
 #[derive(Debug, sqlx::FromRow)]
@@ -66,7 +66,7 @@ pub struct CountryCount {
     pub count: i64,
 }
 
-pub async fn get_unique_ips_by_country(pool: &PgPool) -> Result<Vec<CountryCount>, Error> {
+pub async fn get_unique_ips_by_country(pool: &PgPool) -> Result<Vec<CountryCount>, anyhow::Error> {
     let country_counts: Vec<CountryCount> = sqlx::query_as(
         r#"
         SELECT

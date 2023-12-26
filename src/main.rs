@@ -1,25 +1,57 @@
 use askama::Template;
 use axum::{
-    extract::State,
+    extract::{State, FromRef},
     http::StatusCode,
     response::{Html, IntoResponse, Response},
     routing::get,
     Router,
 };
 use sqlx::postgres::{PgPool, PgPoolOptions};
-use tower_http::services::ServeDir;
+use tower_http::{services::ServeDir, trace::{TraceLayer, DefaultMakeSpan}};
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 
-use std::time::Duration;
+use std::{time::Duration, net::SocketAddr, i32};
 
 mod db;
+mod ws_handler;
+
+#[derive(Clone)]
+struct AppState {
+    db_state: DBState,
+    ws_state: WSState,
+}
+
+#[derive(Clone)]
+struct DBState {
+    pool: PgPool,
+}
+
+// support converting an `AppState` in an `DBState`
+impl FromRef<AppState> for DBState {
+    fn from_ref(app_state: &AppState) -> DBState {
+        app_state.db_state.clone()
+    }
+}
+
+#[derive(Clone)]
+struct WSState {
+    counter: i32,
+    // broadcaster: broadcast::Sender<i32>,
+}
+
+// support converting an `AppState` in an `ApiState`
+impl FromRef<AppState> for WSState {
+    fn from_ref(app_state: &AppState) -> WSState {
+        app_state.ws_state.clone()
+    }
+}
 
 #[tokio::main]
 async fn main() {
     tracing_subscriber::registry()
         .with(
             tracing_subscriber::EnvFilter::try_from_default_env()
-                .unwrap_or_else(|_| "example_templates=debug".into()),
+                .unwrap_or_else(|_| "tower_http=debug".into()),
         )
         .with(tracing_subscriber::fmt::layer())
         .init();
@@ -35,19 +67,45 @@ async fn main() {
         .await
         .expect("can't connect to database");
 
+    // my state variables to be updated via websocket
+    let counter = 0;
+
+    // let (broadcaster, _) = broadcast::channel(10); // Channel for broadcasting counter updates
+
+    let state = AppState {
+        db_state: DBState {
+            pool: pool,
+        },
+        ws_state: WSState {
+            counter: counter,
+            // broadcaster: broadcaster,
+        }
+    };
+
     // build the app with some routes
     let app = Router::new()
         .nest_service("/static", ServeDir::new("static"))
         .route("/", get(index_handler))
         .route("/stats", get(stats_handler))
-        .with_state(pool);
+        .route("/ws", get(ws_handler::ws_handler))
+        .with_state(state)
+        // logging so we can see what's going on
+        .layer(
+            TraceLayer::new_for_http()
+                .make_span_with(DefaultMakeSpan::default().include_headers(true)),
+        );
 
     // run it
     let listener = tokio::net::TcpListener::bind("0.0.0.0:3000")
         .await
         .unwrap();
     tracing::debug!("listening on {}", listener.local_addr().unwrap());
-    axum::serve(listener, app).await.unwrap();
+    axum::serve(
+        listener,
+        app.into_make_service_with_connect_info::<SocketAddr>(),
+    )
+    .await
+    .unwrap();
 }
 
 async fn index_handler() -> impl IntoResponse {
@@ -59,8 +117,8 @@ async fn index_handler() -> impl IntoResponse {
 #[template(path = "index.html")]
 struct IndexTemplate {}
 
-async fn stats_handler(State(pool): State<PgPool>) -> Result<impl IntoResponse, AppError> {
-    let unique_ips_by_country: Vec<db::CountryCount> = db::get_unique_ips_by_country(&pool).await?;
+async fn stats_handler(State(db_state): State<DBState>) -> Result<impl IntoResponse, AppError> {
+    let unique_ips_by_country: Vec<db::CountryCount> = db::get_unique_ips_by_country(&db_state.pool).await?;
 
     let template = StatsTemplate { unique_ips_by_country };
 

@@ -8,6 +8,34 @@
 
     <title>Lewis' portfolio site</title>
   </head>
+  <script type = "text/javascript">
+    window.addEventListener("load", function() {
+        
+        // create websocket instance
+        var mySocket = new WebSocket("ws://localhost:3000/ws");
+        var output = document.getElementById("output");
+
+        // add event listener reacting when message is received
+        mySocket.onmessage = function (event) {
+            // put text into our output div
+            output.textContent = event.data;
+        };
+
+        const counterPlusOneButton = document.querySelector("#counter_plus_one");
+        function onCounterPlusOneClick() {
+          output.textContent = Number(output.textContent) + 1;
+          mySocket.send("counter_plus_one");
+        }
+        counterPlusOneButton.onclick = onCounterPlusOneClick;
+
+        const counterMinusOneButton = document.querySelector("#counter_minus_one");
+        function onCounterMinusOneClick() {
+          output.textContent = Number(output.textContent) - 1;
+          mySocket.send("counter_minus_one");
+        }
+        counterMinusOneButton.onclick = onCounterMinusOneClick;
+    });
+ </script>
 
   <body
     class="bg-stone-100 dark:bg-black dark:text-white font-helvetica dark:font-light m-0"
@@ -213,6 +241,12 @@
               <span>Get in touch</span>
             </button>
           </a>
+        </div>
+
+        <div>
+          <button id="counter_plus_one">+1</button>
+          <button id="counter_minus_one">-1</button>
+          <div id="output"></div>
         </div>
       </article>
     </main>

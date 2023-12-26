@@ -19,12 +19,14 @@
         mySocket.onmessage = function (event) {
             // put text into our output div
             output.textContent = event.data;
+            console.log("Server msg recieved", event.data);
         };
 
         const counterPlusOneButton = document.querySelector("#counter_plus_one");
         function onCounterPlusOneClick() {
           output.textContent = Number(output.textContent) + 1;
           mySocket.send("counter_plus_one");
+          console.log("Msg to server sent", "counter_plus_one");
         }
         counterPlusOneButton.onclick = onCounterPlusOneClick;
 
@@ -32,6 +34,7 @@
         function onCounterMinusOneClick() {
           output.textContent = Number(output.textContent) - 1;
           mySocket.send("counter_minus_one");
+          console.log("Msg to server sent", "counter_minus_one");
         }
         counterMinusOneButton.onclick = onCounterMinusOneClick;
     });
@@ -50,12 +53,6 @@
 
       <article>
         <h1 class="text-6xl m-0">Lewis Torrington</h1>
-
-        <p class="sr-only">
-          Hello, my name is Lewis and this is my page. There's a picture of me
-          shown -&nbsp; a portrait headshot of my plucky, pasty-white self
-          standing in front of a snowy background.
-        </p>
 
         <p class="dark:text-gray-400 text-lg mt-5" aria-hidden="true">
           Hello, my name is Lewis and this is my page. In this iteration of my
@@ -229,9 +226,14 @@
 
         <br />
 
-        <a class="dark:text-gray-300 hover:underline" href="/stats"
-          >See some stats on everyone who's visited ↗</a
-        >
+        <div>
+          <p class="m-0 dark:text-gray-400 text-lg">
+            Click the buttons! Or watch others on this same page click them in real time.
+          </p>
+          <button class="bg-blue-500 text-blue-100 dark:bg-blue-700 dark:text-blue-300 px-4 rounded-md" id="counter_plus_one">+1</button>
+          <button class="bg-blue-500 text-blue-100 dark:bg-blue-700 dark:text-blue-300 px-4 rounded-md" id="counter_minus_one">-1</button>
+          <div id="output">0</div>
+        </div>
 
         <div class="flex justify-center mt-24">
           <a href="https://www.linkedin.com/in/lewis-torrington/">
@@ -241,12 +243,6 @@
               <span>Get in touch</span>
             </button>
           </a>
-        </div>
-
-        <div>
-          <button id="counter_plus_one">+1</button>
-          <button id="counter_minus_one">-1</button>
-          <div id="output"></div>
         </div>
       </article>
     </main>

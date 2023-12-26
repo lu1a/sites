@@ -6,11 +6,12 @@ use axum::{
     routing::get,
     Router,
 };
+use futures::lock::Mutex;
 use sqlx::postgres::{PgPool, PgPoolOptions};
 use tower_http::{services::ServeDir, trace::{TraceLayer, DefaultMakeSpan}};
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 
-use std::{time::Duration, net::SocketAddr, i32};
+use std::{time::Duration, net::SocketAddr, i32, sync::Arc};
 
 mod db;
 mod ws_handler;
@@ -35,8 +36,7 @@ impl FromRef<AppState> for DBState {
 
 #[derive(Clone)]
 struct WSState {
-    counter: i32,
-    // broadcaster: broadcast::Sender<i32>,
+    shared_counter: Arc<Mutex<i32>>
 }
 
 // support converting an `AppState` in an `ApiState`
@@ -68,17 +68,14 @@ async fn main() {
         .expect("can't connect to database");
 
     // my state variables to be updated via websocket
-    let counter = 0;
-
-    // let (broadcaster, _) = broadcast::channel(10); // Channel for broadcasting counter updates
+    let shared_counter = Arc::new(Mutex::new(0));
 
     let state = AppState {
         db_state: DBState {
             pool: pool,
         },
         ws_state: WSState {
-            counter: counter,
-            // broadcaster: broadcaster,
+            shared_counter: shared_counter,
         }
     };
 

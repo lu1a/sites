@@ -4,8 +4,10 @@ use axum::{
 };
 use axum_extra::TypedHeader;
 
-use std::{ops::ControlFlow, borrow::Cow};
+use std::{ops::ControlFlow, borrow::Cow, sync::Arc};
 use std::net::SocketAddr;
+
+use futures::lock::Mutex;
 
 //allows to extract the IP of connecting user
 use axum::extract::connect_info::ConnectInfo;
@@ -36,11 +38,11 @@ pub async fn ws_handler(
 
     // finalize the upgrade process by returning upgrade callback.
     // we can customize the callback by sending additional info such as address.
-    ws.on_upgrade(move |socket| handle_socket(socket, addr, ws_state.counter))
+    ws.on_upgrade(move |socket| handle_socket(socket, addr, ws_state.shared_counter))
 }
 
 /// Actual websocket statemachine (one will be spawned per connection)
-async fn handle_socket(mut socket: WebSocket, who: SocketAddr, counter: i32) {
+async fn handle_socket(mut socket: WebSocket, who: SocketAddr, shared_counter: Arc<Mutex<i32>>) {
     //send a ping (unsupported by some browsers) just to kick things off and get a response
     if socket.send(Message::Ping(vec![1, 2, 3])).await.is_ok() {
         println!("Pinged {who}...");
@@ -51,15 +53,25 @@ async fn handle_socket(mut socket: WebSocket, who: SocketAddr, counter: i32) {
         return;
     }
 
+    if let Some(msg) = socket.recv().await {
+        if let Ok(msg) = msg {
+            if process_message(&msg).is_break() {
+                return;
+            }
+            println!("client {who} ponged back");
+        } else {
+            println!("client {who} abruptly disconnected");
+            return;
+        }
+    }
+
     // By splitting socket we can send and receive at the same time. In this example we will send
     // unsolicited messages to client based on some sort of server's internal event (i.e .timer).
     let (mut sender, mut receiver) = socket.split();
 
     // Send the initial counter value to the connected WebSocket client
-    if !sender.send(Message::Text(counter.to_string())).await.is_ok() {
-        eprintln!("Failed to send initial counter value to the WebSocket client");
-        return;
-    }
+
+    let shared_counter_clone_for_sending = Arc::clone(&shared_counter);
 
     // Spawn a task that will push several messages to the client (does not matter what client does)
     let mut send_task = tokio::spawn(async move {
@@ -67,9 +79,11 @@ async fn handle_socket(mut socket: WebSocket, who: SocketAddr, counter: i32) {
         loop {
             cnt += 1;
 
+            let counter_at_this_moment = read_counter(Arc::clone(&shared_counter_clone_for_sending)).await;
+
             // In case of any websocket error, we exit.
             if sender
-                .send(Message::Text(counter.to_string()))
+                .send(Message::Text(counter_at_this_moment.to_string()))
                 .await
                 .is_err()
             {
@@ -93,6 +107,8 @@ async fn handle_socket(mut socket: WebSocket, who: SocketAddr, counter: i32) {
         cnt
     });
 
+    let shared_counter_clone_for_recieving = Arc::clone(&shared_counter);
+
     // This second task will receive messages from client and print them on server console
     let mut recv_task = tokio::spawn(async move {
         let mut cnt = 0;
@@ -100,9 +116,10 @@ async fn handle_socket(mut socket: WebSocket, who: SocketAddr, counter: i32) {
             cnt += 1;
 
             // print message and break if instructed to do so
-            if process_message(msg.clone(), who).is_break() {
+            if process_message(&msg.clone()).is_break() {
                 break;
             }
+
             let msg_as_text: String;
             match msg.clone().into_text() {
                 Ok(value) => {
@@ -113,21 +130,14 @@ async fn handle_socket(mut socket: WebSocket, who: SocketAddr, counter: i32) {
                 }
             }
 
-            // the operations we allow on the ws
-            match msg_as_text.as_str() { 
-                "counter_plus_one" => println!("+1"), // actually update it here
-                "counter_minus_one" => println!("-1"), // actually update it here
-                _=>println!("Bad operation"), 
-            };
+            let mut counter_locked = shared_counter_clone_for_recieving.lock().await;
 
-            // // send confirmation back
-            // if sender
-            //     .send(Message::Text(msg_as_text))
-            //     .await
-            //     .is_err()
-            // {
-            //     break;
-            // }
+            // the operations we allow on the ws
+            *counter_locked = match msg_as_text.as_str() {
+                "counter_plus_one" => *counter_locked + 1,
+                "counter_minus_one" => *counter_locked - 1,
+                _=>*counter_locked,
+            };
         }
         cnt
     });
@@ -155,35 +165,21 @@ async fn handle_socket(mut socket: WebSocket, who: SocketAddr, counter: i32) {
 }
 
 /// helper to print contents of messages to stdout. Has special treatment for Close.
-fn process_message(msg: Message, who: SocketAddr) -> ControlFlow<(), ()> {
+fn process_message(msg: &Message) -> ControlFlow<(), ()> {
     match msg {
-        Message::Text(t) => {
-            println!(">>> {who} sent str: {t:?}");
-        }
-        Message::Binary(d) => {
-            println!(">>> {} sent {} bytes: {:?}", who, d.len(), d);
-        }
-        Message::Close(c) => {
-            if let Some(cf) = c {
-                println!(
-                    ">>> {} sent close with code {} and reason `{}`",
-                    who, cf.code, cf.reason
-                );
-            } else {
-                println!(">>> {who} somehow sent close message without CloseFrame");
-            }
+        Message::Close(_) => {
             return ControlFlow::Break(());
         }
+        _ => {
+            return ControlFlow::Continue(());
+        }
+    };
+}
 
-        Message::Pong(v) => {
-            println!(">>> {who} sent pong with {v:?}");
-        }
-        // You should never need to manually handle Message::Ping, as axum's websocket library
-        // will do so for you automagically by replying with Pong and copying the v according to
-        // spec. But if you need the contents of the pings you can see them here.
-        Message::Ping(v) => {
-            println!(">>> {who} sent ping with {v:?}");
-        }
-    }
-    ControlFlow::Continue(())
+async fn read_counter(shared_counter: Arc<Mutex<i32>>) -> i32 {
+    // Lock the mutex to access the counter, in a separate function so that the lock can break when we return here
+    let counter = shared_counter.lock().await;
+
+    // Return the incremented value as an i32
+    *counter
 }

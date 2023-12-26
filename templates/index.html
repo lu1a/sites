@@ -12,7 +12,9 @@
     window.addEventListener("load", function() {
         
         // create websocket instance
-        var mySocket = new WebSocket("ws://localhost:3000/ws");
+        var currentURL = window.location.hostname;
+        var currentPort = window.location.port;
+        var mySocket = new WebSocket("ws://" + currentURL + ":" + currentPort + "/ws");
         var output = document.getElementById("output");
 
         // add event listener reacting when message is received

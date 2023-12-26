@@ -10,14 +10,8 @@
   </head>
   <script type="text/javascript">
     window.addEventListener("load", function () {
-      var currentProtocol = window.location.protocol;
-      console.log(currentProtocol);
-      var currentURL = window.location.hostname;
-      var currentPort = window.location.port;
       // create websocket instance
-      var mySocket = new WebSocket(
-        currentProtocol + "//" + currentURL + ":" + currentPort + "/ws",
-      );
+      var mySocket = new WebSocket("/ws");
       var output = document.getElementById("output");
 
       // add event listener reacting when message is received
@@ -224,7 +218,7 @@
           </p>
         </div>
 
-        <br />
+        <br /><br />
 
         <div>
           <p class="m-0 dark:text-gray-400 text-lg">
@@ -232,13 +226,13 @@
             real time.
           </p>
           <button
-            class="bg-blue-500 text-blue-100 dark:bg-blue-700 dark:text-blue-300 px-4 rounded-md"
+            class="bg-blue-500 text-blue-100 dark:bg-blue-700 dark:text-blue-300 px-4 rounded-md font-semibold"
             id="counter_plus_one"
           >
             +1
           </button>
           <button
-            class="bg-blue-500 text-blue-100 dark:bg-blue-700 dark:text-blue-300 px-4 rounded-md"
+            class="bg-blue-500 text-blue-100 dark:bg-blue-700 dark:text-blue-300 px-4 rounded-md font-semibold"
             id="counter_minus_one"
           >
             -1

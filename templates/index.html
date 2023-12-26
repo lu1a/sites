@@ -6,41 +6,43 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link href="/static/index.css" rel="stylesheet" />
 
-    <title>Lewis' portfolio site</title>
+    <title>Lewis&apos; portfolio site</title>
   </head>
-  <script type = "text/javascript">
-    window.addEventListener("load", function() {
-        
-        // create websocket instance
-        var currentURL = window.location.hostname;
-        var currentPort = window.location.port;
-        var mySocket = new WebSocket("ws://" + currentURL + ":" + currentPort + "/ws");
-        var output = document.getElementById("output");
+  <script type="text/javascript">
+    window.addEventListener("load", function () {
+      // create websocket instance
+      var currentURL = window.location.hostname;
+      var currentPort = window.location.port;
+      var mySocket = new WebSocket(
+        window.location.protocol + "//" + currentURL + ":" + currentPort + "/ws",
+      );
+      var output = document.getElementById("output");
 
-        // add event listener reacting when message is received
-        mySocket.onmessage = function (event) {
-            // put text into our output div
-            output.textContent = event.data;
-            console.log("Server msg recieved", event.data);
-        };
+      // add event listener reacting when message is received
+      mySocket.onmessage = function (event) {
+        // put text into our output div
+        output.textContent = event.data;
+        console.log("Server msg recieved", event.data);
+      };
 
-        const counterPlusOneButton = document.querySelector("#counter_plus_one");
-        function onCounterPlusOneClick() {
-          output.textContent = Number(output.textContent) + 1;
-          mySocket.send("counter_plus_one");
-          console.log("Msg to server sent", "counter_plus_one");
-        }
-        counterPlusOneButton.onclick = onCounterPlusOneClick;
+      const counterPlusOneButton = document.querySelector("#counter_plus_one");
+      function onCounterPlusOneClick() {
+        output.textContent = Number(output.textContent) + 1;
+        mySocket.send("counter_plus_one");
+        console.log("Msg to server sent", "counter_plus_one");
+      }
+      counterPlusOneButton.onclick = onCounterPlusOneClick;
 
-        const counterMinusOneButton = document.querySelector("#counter_minus_one");
-        function onCounterMinusOneClick() {
-          output.textContent = Number(output.textContent) - 1;
-          mySocket.send("counter_minus_one");
-          console.log("Msg to server sent", "counter_minus_one");
-        }
-        counterMinusOneButton.onclick = onCounterMinusOneClick;
+      const counterMinusOneButton =
+        document.querySelector("#counter_minus_one");
+      function onCounterMinusOneClick() {
+        output.textContent = Number(output.textContent) - 1;
+        mySocket.send("counter_minus_one");
+        console.log("Msg to server sent", "counter_minus_one");
+      }
+      counterMinusOneButton.onclick = onCounterMinusOneClick;
     });
- </script>
+  </script>
 
   <body
     class="bg-stone-100 dark:bg-black dark:text-white font-helvetica dark:font-light m-0"
@@ -79,9 +81,7 @@
                 >UpCloud</a
               >.
             </li>
-            <li>
-              Specialties: data engineering, full-stack development.
-            </li>
+            <li>Specialties: data engineering, full-stack development.</li>
           </ul>
           For more of a pitch about me, check out my CV.
         </div>
@@ -192,11 +192,7 @@
             <i>libsignal</i> source code ↗
           </a>
           <br />
-          <a
-            class="hover:underline"
-            href="https://once.com"
-            target="_blank"
-          >
+          <a class="hover:underline" href="https://once.com" target="_blank">
             Once ↗
           </a>
         </div>
@@ -219,8 +215,8 @@
               source code
             </a>
             &nbsp;on my GitHub.<br />As you&apos;ll be able to see there, I have
-            no code for cookies or trackers - though I do log my visitors to
-            a TimeScale instance for fun. The only fruitful thing that&apos;s
+            no code for cookies or trackers - though I do log my visitors to a
+            TimeScale instance for fun. The only fruitful thing that&apos;s
             gotten me so far is the knowledge of how many US-based bots there
             are out there.
           </p>
@@ -230,10 +226,21 @@
 
         <div>
           <p class="m-0 dark:text-gray-400 text-lg">
-            Click the buttons! Or watch others on this same page click them in real time.
+            Click the buttons! Or watch others on this same page click them in
+            real time.
           </p>
-          <button class="bg-blue-500 text-blue-100 dark:bg-blue-700 dark:text-blue-300 px-4 rounded-md" id="counter_plus_one">+1</button>
-          <button class="bg-blue-500 text-blue-100 dark:bg-blue-700 dark:text-blue-300 px-4 rounded-md" id="counter_minus_one">-1</button>
+          <button
+            class="bg-blue-500 text-blue-100 dark:bg-blue-700 dark:text-blue-300 px-4 rounded-md"
+            id="counter_plus_one"
+          >
+            +1
+          </button>
+          <button
+            class="bg-blue-500 text-blue-100 dark:bg-blue-700 dark:text-blue-300 px-4 rounded-md"
+            id="counter_minus_one"
+          >
+            -1
+          </button>
           <div id="output">0</div>
         </div>
 

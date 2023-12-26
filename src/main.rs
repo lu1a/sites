@@ -1,7 +1,7 @@
 use askama::Template;
 use axum::{
     extract::{State, FromRef},
-    http::{StatusCode, header::CONTENT_TYPE, Method},
+    http::StatusCode,
     response::{Html, IntoResponse, Response},
     routing::get,
     Router,
@@ -9,7 +9,6 @@ use axum::{
 use futures::lock::Mutex;
 use sqlx::postgres::{PgPool, PgPoolOptions};
 use tower_http::{services::ServeDir, trace::{TraceLayer, DefaultMakeSpan}};
-use tower_http::cors::{Any, CorsLayer};
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 
 use std::{time::Duration, net::SocketAddr, i32, sync::Arc};
@@ -80,11 +79,6 @@ async fn main() {
         }
     };
 
-    let cors = CorsLayer::new()
-        .allow_methods([Method::GET, Method::POST])
-        .allow_origin(Any)
-        .allow_headers([CONTENT_TYPE]);
-
     // build the app with some routes
     let app = Router::new()
         .nest_service("/static", ServeDir::new("static"))
@@ -96,8 +90,7 @@ async fn main() {
         .layer(
             TraceLayer::new_for_http()
                 .make_span_with(DefaultMakeSpan::default().include_headers(true)),
-        )
-        .layer(cors);
+        );
 
     // run it
     let listener = tokio::net::TcpListener::bind("0.0.0.0:3000")

@@ -11,7 +11,7 @@
   <script type="text/javascript">
     window.addEventListener("load", function () {
       // create websocket instance
-      var mySocket = new WebSocket("/ws");
+      var mySocket = new WebSocket(window.location.href + "ws");
       var output = document.getElementById("output");
 
       // add event listener reacting when message is received

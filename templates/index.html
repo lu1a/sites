@@ -10,11 +10,13 @@
   </head>
   <script type="text/javascript">
     window.addEventListener("load", function () {
-      // create websocket instance
+      var currentProtocol = window.location.protocol;
+      console.log(currentProtocol);
       var currentURL = window.location.hostname;
       var currentPort = window.location.port;
+      // create websocket instance
       var mySocket = new WebSocket(
-        window.location.protocol + "//" + currentURL + ":" + currentPort + "/ws",
+        currentProtocol + "//" + currentURL + ":" + currentPort + "/ws",
       );
       var output = document.getElementById("output");
 

@@ -6,6 +6,7 @@ use axum::{
     routing::get,
     Router,
 };
+use broadcaster::BroadcastChannel;
 use futures::lock::Mutex;
 use sqlx::postgres::{PgPool, PgPoolOptions};
 use tower_http::{services::ServeDir, trace::{TraceLayer, DefaultMakeSpan}};
@@ -36,7 +37,8 @@ impl FromRef<AppState> for DBState {
 
 #[derive(Clone)]
 struct WSState {
-    shared_counter: Arc<Mutex<i32>>
+    shared_counter: Arc<Mutex<i32>>,
+    shared_counter_broadcaster: BroadcastChannel<i32>,
 }
 
 // support converting an `AppState` in an `ApiState`
@@ -69,6 +71,7 @@ async fn main() {
 
     // my state variables to be updated via websocket
     let shared_counter = Arc::new(Mutex::new(0));
+    let shared_counter_broadcaster = BroadcastChannel::new();
 
     let state = AppState {
         db_state: DBState {
@@ -76,6 +79,7 @@ async fn main() {
         },
         ws_state: WSState {
             shared_counter: shared_counter,
+            shared_counter_broadcaster: shared_counter_broadcaster,
         }
     };
 

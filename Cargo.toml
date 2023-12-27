@@ -9,6 +9,7 @@ anyhow = "1.0"
 askama = "0.11"
 axum = { version = "0.7.2", features = ["ws"] }
 axum-extra = { version = "0.9.0", features = ["typed-header"] }
+broadcaster  = "1.0.0"
 futures = "0.3"
 futures-util = { version = "0.3", default-features = false, features = ["sink", "std"] }
 headers = "0.4"

@@ -3,11 +3,12 @@ use axum::{
     response::IntoResponse,
 };
 use axum_extra::TypedHeader;
+use broadcaster::BroadcastChannel;
 
 use std::{ops::ControlFlow, borrow::Cow, sync::Arc};
 use std::net::SocketAddr;
 
-use futures::lock::Mutex;
+use futures::{lock::Mutex, channel::mpsc::SendError};
 
 //allows to extract the IP of connecting user
 use axum::extract::connect_info::ConnectInfo;
@@ -38,11 +39,11 @@ pub async fn ws_handler(
 
     // finalize the upgrade process by returning upgrade callback.
     // we can customize the callback by sending additional info such as address.
-    ws.on_upgrade(move |socket| handle_socket(socket, addr, ws_state.shared_counter))
+    ws.on_upgrade(move |socket| handle_socket(socket, addr, ws_state.shared_counter, ws_state.shared_counter_broadcaster))
 }
 
 /// Actual websocket statemachine (one will be spawned per connection)
-async fn handle_socket(mut socket: WebSocket, who: SocketAddr, shared_counter: Arc<Mutex<i32>>) {
+async fn handle_socket(mut socket: WebSocket, who: SocketAddr, shared_counter: Arc<Mutex<i32>>, shared_counter_broadcaster: BroadcastChannel<i32>) {
     //send a ping (unsupported by some browsers) just to kick things off and get a response
     if socket.send(Message::Ping(vec![1, 2, 3])).await.is_ok() {
         println!("Pinged {who}...");
@@ -71,7 +72,7 @@ async fn handle_socket(mut socket: WebSocket, who: SocketAddr, shared_counter: A
 
     // Send the initial counter value to the connected WebSocket client
 
-    let shared_counter_clone_for_sending = Arc::clone(&shared_counter);
+    let mut shared_counter_broadcaster_clone_for_sending = shared_counter_broadcaster.clone();
 
     // Spawn a task that will push several messages to the client (does not matter what client does)
     let mut send_task = tokio::spawn(async move {
@@ -79,18 +80,20 @@ async fn handle_socket(mut socket: WebSocket, who: SocketAddr, shared_counter: A
         loop {
             cnt += 1;
 
-            let counter_at_this_moment = read_counter(Arc::clone(&shared_counter_clone_for_sending)).await;
+            let counter_at_this_moment = shared_counter_broadcaster_clone_for_sending.next().await;
+            let counter_as_text = match counter_at_this_moment {
+                Some(v) => v.to_string(),
+                None => break,
+            };
 
             // In case of any websocket error, we exit.
             if sender
-                .send(Message::Text(counter_at_this_moment.to_string()))
+                .send(Message::Text(counter_as_text))
                 .await
                 .is_err()
             {
                 break;
             }
-
-            tokio::time::sleep(std::time::Duration::from_secs(1)).await;
         }
 
         println!("Sending close to {who}...");
@@ -107,7 +110,8 @@ async fn handle_socket(mut socket: WebSocket, who: SocketAddr, shared_counter: A
         cnt
     });
 
-    let shared_counter_clone_for_recieving = Arc::clone(&shared_counter);
+    let shared_counter_clone_for_receiving = Arc::clone(&shared_counter);
+    let shared_counter_broadcaster_clone_for_receiving = shared_counter_broadcaster.clone();
 
     // This second task will receive messages from client and print them on server console
     let mut recv_task = tokio::spawn(async move {
@@ -130,14 +134,15 @@ async fn handle_socket(mut socket: WebSocket, who: SocketAddr, shared_counter: A
                 }
             }
 
-            let mut counter_locked = shared_counter_clone_for_recieving.lock().await;
-
-            // the operations we allow on the ws
-            *counter_locked = match msg_as_text.as_str() {
-                "counter_plus_one" => *counter_locked + 1,
-                "counter_minus_one" => *counter_locked - 1,
-                _=>*counter_locked,
-            };
+            let mutate_result = mutate_counter(msg_as_text, Arc::clone(&shared_counter_clone_for_receiving), shared_counter_broadcaster_clone_for_receiving.clone()).await;
+            match mutate_result {
+                Ok(_) => {
+                    // nothing
+                }
+                Err(_) => {
+                    break;
+                }
+            }
         }
         cnt
     });
@@ -176,10 +181,15 @@ fn process_message(msg: &Message) -> ControlFlow<(), ()> {
     };
 }
 
-async fn read_counter(shared_counter: Arc<Mutex<i32>>) -> i32 {
+async fn mutate_counter(msg_as_text: String, shared_counter: Arc<Mutex<i32>>, shared_counter_broadcaster: BroadcastChannel<i32>) -> Result<(), SendError> {
     // Lock the mutex to access the counter, in a separate function so that the lock can break when we return here
-    let counter = shared_counter.lock().await;
+    let mut counter = shared_counter.lock().await;
 
-    // Return the incremented value as an i32
-    *counter
+    *counter = match msg_as_text.as_str() {
+        "counter_plus_one" => *counter + 1,
+        "counter_minus_one" => *counter - 1,
+        _=>*counter,
+    };
+
+    shared_counter_broadcaster.send(&counter).await
 }

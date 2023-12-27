@@ -66,6 +66,17 @@ async fn handle_socket(mut socket: WebSocket, who: SocketAddr, shared_counter: A
         }
     }
 
+    let initial_shared_counter_clone = Arc::clone(&shared_counter);
+    let initial_counter_as_text = query_initial_counter(initial_shared_counter_clone).await.to_string();
+    if socket
+        .send(Message::Text(initial_counter_as_text))
+        .await
+        .is_err()
+    {
+        println!("Could not send initial counter val to {who}!");
+        return;
+    }
+
     // By splitting socket we can send and receive at the same time. In this example we will send
     // unsolicited messages to client based on some sort of server's internal event (i.e .timer).
     let (mut sender, mut receiver) = socket.split();
@@ -134,14 +145,11 @@ async fn handle_socket(mut socket: WebSocket, who: SocketAddr, shared_counter: A
                 }
             }
 
-            let mutate_result = mutate_counter(msg_as_text, Arc::clone(&shared_counter_clone_for_receiving), shared_counter_broadcaster_clone_for_receiving.clone()).await;
-            match mutate_result {
-                Ok(_) => {
-                    // nothing
-                }
-                Err(_) => {
-                    break;
-                }
+            if mutate_counter(msg_as_text, Arc::clone(&shared_counter_clone_for_receiving), shared_counter_broadcaster_clone_for_receiving.clone())
+                .await
+                .is_err()
+            {
+                break;
             }
         }
         cnt
@@ -179,6 +187,13 @@ fn process_message(msg: &Message) -> ControlFlow<(), ()> {
             return ControlFlow::Continue(());
         }
     };
+}
+
+async fn query_initial_counter(shared_counter: Arc<Mutex<i32>>) -> i32 {
+    // Lock the mutex to access the counter, in a separate function so that the lock can break when we return here
+    let counter = shared_counter.lock().await;
+
+    *counter
 }
 
 async fn mutate_counter(msg_as_text: String, shared_counter: Arc<Mutex<i32>>, shared_counter_broadcaster: BroadcastChannel<i32>) -> Result<(), SendError> {

@@ -109,14 +109,17 @@ async fn main() {
     .unwrap();
 }
 
-async fn index_handler() -> impl IntoResponse {
-    let template = IndexTemplate {};
+async fn index_handler(State(ws_state): State<WSState>) -> impl IntoResponse {
+    let initial_counter = ws_handler::query_counter(ws_state.shared_counter).await;
+    let template = IndexTemplate { initial_counter };
     HtmlTemplate(template)
 }
 
 #[derive(Template)]
 #[template(path = "index.html")]
-struct IndexTemplate {}
+struct IndexTemplate {
+    initial_counter: i32,
+}
 
 async fn stats_handler(State(db_state): State<DBState>) -> Result<impl IntoResponse, AppError> {
     let unique_ips_by_country: Vec<db::CountryCount> = db::get_unique_ips_by_country(&db_state.pool).await?;

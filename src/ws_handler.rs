@@ -67,7 +67,7 @@ async fn handle_socket(mut socket: WebSocket, who: SocketAddr, shared_counter: A
     }
 
     let initial_shared_counter_clone = Arc::clone(&shared_counter);
-    let initial_counter_as_text = query_initial_counter(initial_shared_counter_clone).await.to_string();
+    let initial_counter_as_text = query_counter(initial_shared_counter_clone).await.to_string();
     if socket
         .send(Message::Text(initial_counter_as_text))
         .await
@@ -189,7 +189,7 @@ fn process_message(msg: &Message) -> ControlFlow<(), ()> {
     };
 }
 
-async fn query_initial_counter(shared_counter: Arc<Mutex<i32>>) -> i32 {
+pub async fn query_counter(shared_counter: Arc<Mutex<i32>>) -> i32 {
     // Lock the mutex to access the counter, in a separate function so that the lock can break when we return here
     let counter = shared_counter.lock().await;
 

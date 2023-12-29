@@ -18,11 +18,11 @@ use futures::{sink::SinkExt, stream::StreamExt};
 
 use crate::WSState;
 
-/// The handler for the HTTP request (this gets called when the HTTP GET lands at the start
-/// of websocket negotiation). After this completes, the actual switching from HTTP to
-/// websocket protocol will occur.
-/// This is the last point where we can extract TCP/IP metadata such as IP address of the client
-/// as well as things from HTTP headers such as user-agent of the browser etc.
+// The handler for the HTTP request (this gets called when the HTTP GET lands at the start
+// of websocket negotiation). After this completes, the actual switching from HTTP to
+// websocket protocol will occur.
+// This is the last point where we can extract TCP/IP metadata such as IP address of the client
+// as well as things from HTTP headers such as user-agent of the browser etc.
 pub async fn ws_handler(
     ws: WebSocketUpgrade,
     user_agent: Option<TypedHeader<headers::UserAgent>>,
@@ -42,7 +42,7 @@ pub async fn ws_handler(
     ws.on_upgrade(move |socket| handle_socket(socket, addr, ws_state.shared_counter, ws_state.shared_counter_broadcaster))
 }
 
-/// Actual websocket statemachine (one will be spawned per connection)
+// Actual websocket statemachine (one will be spawned per connection)
 async fn handle_socket(mut socket: WebSocket, who: SocketAddr, shared_counter: Arc<Mutex<i32>>, shared_counter_broadcaster: BroadcastChannel<i32>) {
     //send a ping (unsupported by some browsers) just to kick things off and get a response
     if socket.send(Message::Ping(vec![1, 2, 3])).await.is_ok() {
@@ -177,7 +177,7 @@ async fn handle_socket(mut socket: WebSocket, who: SocketAddr, shared_counter: A
     println!("Websocket context {who} destroyed");
 }
 
-/// helper to print contents of messages to stdout. Has special treatment for Close.
+// helper to print contents of messages to stdout. Has special treatment for Close.
 fn process_message(msg: &Message) -> ControlFlow<(), ()> {
     match msg {
         Message::Close(_) => {

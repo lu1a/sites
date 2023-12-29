@@ -11,8 +11,9 @@ RUN cargo chef cook --release --recipe-path recipe.json
 COPY . .
 RUN cargo build --release --bin portfolio-site
 
-FROM debian:bullseye-slim AS runtime
+FROM debian:bookworm-slim AS runtime
 WORKDIR app
+COPY ./static ./static
 COPY --from=builder /app/target/release/portfolio-site /usr/local/bin
 EXPOSE 3000
 ENTRYPOINT ["/usr/local/bin/portfolio-site"]

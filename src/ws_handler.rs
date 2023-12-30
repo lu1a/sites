@@ -91,7 +91,6 @@ async fn handle_socket(mut socket: WebSocket, who: SocketAddr, sender_broadcaste
                 Some(v) => v,
                 None => break,
             };
-            println!("🤷 {event}");
 
             // In case of any websocket error, we exit.
             if sender
@@ -122,7 +121,6 @@ async fn handle_socket(mut socket: WebSocket, who: SocketAddr, sender_broadcaste
         println!("Could not send this user's cursor val to {who}!");
         return;
     }
-    println!("🤷 hello");
 
     let shared_counter_clone_for_receiving = Arc::clone(&shared_counter);
     let broadcaster_clone_for_receiving = sender_broadcaster.clone();

@@ -17,9 +17,11 @@
 
       // add event listener reacting when message is received
       mySocket.onmessage = function (event) {
-        // put text into our output div
-        output.textContent = event.data;
-        console.log("Server msg recieved", event.data);
+        parsedOutput = JSON.parse(event.data);        
+        console.log("Server msg recieved", parsedOutput);
+        if(parsedOutput.counter) {
+          output.textContent = parsedOutput.counter;
+        }
       };
 
       const counterPlusOneButton = document.querySelector("#counter_plus_one");

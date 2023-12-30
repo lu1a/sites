@@ -8,11 +8,12 @@ use axum::{
 };
 use broadcaster::BroadcastChannel;
 use futures::lock::Mutex;
+use serde::{Serialize, Deserialize};
 use sqlx::postgres::{PgPool, PgPoolOptions};
 use tower_http::{services::ServeDir, trace::{TraceLayer, DefaultMakeSpan}};
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 
-use std::{time::Duration, net::SocketAddr, i32, sync::Arc};
+use std::{time::Duration, net::SocketAddr, i32, sync::Arc, collections::HashMap};
 
 mod db;
 mod ws_handler;
@@ -37,8 +38,10 @@ impl FromRef<AppState> for DBState {
 
 #[derive(Clone)]
 struct WSState {
+    sender_broadcaster: BroadcastChannel<String>,
+
     shared_counter: Arc<Mutex<i32>>,
-    shared_counter_broadcaster: BroadcastChannel<i32>,
+    user_cursors: Arc<Mutex<HashMap<String, UserCursor>>>,
 }
 
 // support converting an `AppState` in an `ApiState`
@@ -70,16 +73,18 @@ async fn main() {
         .expect("can't connect to database");
 
     // my state variables to be updated via websocket
+    let sender_broadcaster = BroadcastChannel::new();
     let shared_counter = Arc::new(Mutex::new(0));
-    let shared_counter_broadcaster = BroadcastChannel::new();
+    let user_cursors = Arc::new(Mutex::new(HashMap::new()));
 
     let state = AppState {
         db_state: DBState {
             pool: pool,
         },
         ws_state: WSState {
+            sender_broadcaster: sender_broadcaster,
             shared_counter: shared_counter,
-            shared_counter_broadcaster: shared_counter_broadcaster,
+            user_cursors,
         }
     };
 
@@ -178,4 +183,41 @@ where
     fn from(err: E) -> Self {
         Self(err.into())
     }
+}
+
+#[derive(Clone, Debug, Serialize, Deserialize)]
+struct UserCursor {
+    x: f64,
+    y: f64,
+    unique_id: String,
+    emoji: String,
+}
+
+impl UserCursor {
+    // Constructor to create a new User instance
+    fn new(x: f64, y: f64, unique_id: String) -> Self {
+        let emoji = generate_emoji(&unique_id); // Generate emoji based on unique ID
+        UserCursor {
+            x,
+            y,
+            unique_id,
+            emoji,
+        }
+    }
+}
+
+// Function to generate an emoji based on the unique ID
+fn generate_emoji(unique_id: &str) -> String {
+    // Replace this with your custom logic to generate an emoji
+    // For demonstration purposes, here's a simple example using the first character of the unique ID
+    let emoji = match unique_id.chars().next() {
+        Some(c) => match c {
+            'a' => "😊",
+            'b' => "🌟",
+            // Add more cases as needed...
+            _ => "❓", // Default emoji if no match found
+        },
+        None => "❓", // Default emoji if the unique ID is empty
+    };
+    emoji.to_string()
 }

@@ -190,6 +190,7 @@ struct UserCursor {
     x: f64,
     y: f64,
     emoji: String,
+    client_generated_id: String,
 }
 
 impl UserCursor {
@@ -199,6 +200,7 @@ impl UserCursor {
             x,
             y,
             emoji: "question".to_string(),
+            client_generated_id: String::new(),
         }
     }
 }

@@ -14,7 +14,6 @@
       font-size: 24px; /* Set the font size as needed */
     }
   </style>
-  <script src="https://cdn.jsdelivr.net/npm/js-base64@2.5.2/base64.min.js"></script>
   <script type="text/javascript">
     const emojiMap = {
       happy: '😊',
@@ -41,19 +40,57 @@
       question: '❓',
     };
 
+    const allUserCursors = {};
+
+    // Function to add objects to the set based on a unique key
+    function addCursorToSet(key, obj) {
+      if (!allUserCursors[key]) {
+        allUserCursors[key] = obj;
+      } else {
+        // Replace the existing object with the new one
+        allUserCursors[key] = obj;
+      }
+    }
+
     function generateRandomEmojiKey() {
       const keys = Object.keys(emojiMap);
       const randomKey = keys[Math.floor(Math.random() * keys.length)];
       return randomKey;
     }
 
-    function drawEmojiAtCoordinates(x, y, emoji) {
+    function generateUUID() { // Public Domain/MIT
+      var d = new Date().getTime();//Timestamp
+      var d2 = ((typeof performance !== 'undefined') && performance.now && (performance.now()*1000)) || 0;//Time in microseconds since page-load or 0 if unsupported
+      return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        var r = Math.random() * 16;//random number between 0 and 16
+        if(d > 0){//Use timestamp until depleted
+          r = (d + r)%16 | 0;
+          d = Math.floor(d/16);
+        } else {//Use microseconds since page-load if supported
+          r = (d2 + r)%16 | 0;
+          d2 = Math.floor(d2/16);
+        }
+        return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+      });
+    }
+
+    function drawEmojiAtCoordinates(x, y, emoji, uniqueKey) {
+      const emojiContainer = document.getElementById('emojiContainer');
+      
+      // Check if the div with the uniqueKey exists and remove it
+      const existingEmoji = document.getElementById(uniqueKey);
+      if (existingEmoji) {
+        emojiContainer.removeChild(existingEmoji);
+      }
+      
+      // Create a new div with the uniqueKey as ID and fill it with the emoji
       const emojiElement = document.createElement('div');
       emojiElement.textContent = emoji;
       emojiElement.classList.add('emoji');
-      emojiElement.style.left = `${x}px`;
-      emojiElement.style.top = `${y}px`;
-      document.getElementById('emojiContainer').appendChild(emojiElement);
+      emojiElement.id = uniqueKey;
+      emojiElement.style.left = `${x}%`;
+      emojiElement.style.top = `${y}%`;
+      emojiContainer.appendChild(emojiElement);
     }
 
     window.addEventListener("load", function () {
@@ -64,6 +101,7 @@
         x: 0,
         y: 0,
         emoji: generateRandomEmojiKey(),
+        client_generated_id: generateUUID(),
       };
       
       const sharedCounterOutput = document.getElementById("shared-counter-output");
@@ -73,11 +111,16 @@
         parsedOutput = JSON.parse(event.data);
         if (parsedOutput.counter) {
           sharedCounterOutput.textContent = parsedOutput.counter;
-          console.log("Server msg recieved", parsedOutput);
+          console.log("Server shared_counter msg recieved", parsedOutput);
         }
         if (parsedOutput.cursor_event) {
           let emoji = emojiMap[parsedOutput.cursor_event.emoji];
-          drawEmojiAtCoordinates(parsedOutput.cursor_event.x, parsedOutput.cursor_event.y, emoji);
+          addCursorToSet(parsedOutput.cursor_event.client_generated_id, parsedOutput.cursor_event);
+          
+          // don't draw out own cursor
+          if (parsedOutput.cursor_event.client_generated_id != myUserCursorData.client_generated_id) {
+            drawEmojiAtCoordinates(parsedOutput.cursor_event.x, parsedOutput.cursor_event.y, emoji, parsedOutput.cursor_event.client_generated_id);
+          }
         }
       };
 
@@ -98,9 +141,11 @@
       }
       counterMinusOneButton.onclick = onCounterMinusOneClick;
 
-      function onCursorMove(event) {
-        myUserCursorData.x = event.clientX;
-        myUserCursorData.y = event.clientY;
+      function onCursorMove(e) {
+        // myUserCursorData.x = event.clientX;
+        // myUserCursorData.y = event.clientY;
+        myUserCursorData.x = parseInt(e.pageX / window.innerWidth * 100);
+        myUserCursorData.y = parseInt(e.pageY / window.innerHeight * 100);
 
         mySocket.send(JSON.stringify({"object_name": "my_user_cursor", "new_state_serial": JSON.stringify(myUserCursorData)}));
       }

@@ -82,7 +82,7 @@ async fn handle_socket(
             .await
             .is_err()
         {
-            println!("Could not send initial counter val to {who}!");
+            println!("Could not populate initial user cursors to {who}!");
             return;
         }
     }
@@ -216,6 +216,8 @@ async fn handle_socket(
 
     // returning from the handler closes the websocket connection
     println!("Websocket context {who} destroyed");
+
+    let _ = delete_my_user_cursor(user_cursors, who).await;
 }
 
 // helper to print contents of messages to stdout. Has special treatment for Close.
@@ -253,6 +255,16 @@ async fn mutate_my_user_cursor(user_cursors: Arc<Mutex<HashMap<String, UserCurso
     let cursor_event_as_string = serde_json::to_string(&updated_cursor).unwrap();
 
     user_cursors_broadcaster.send(&format!("{{\"cursor_event\":{cursor_event_as_string}}}")).await
+}
+
+async fn delete_my_user_cursor(user_cursors: Arc<Mutex<HashMap<String, UserCursor>>>, who: SocketAddr) -> Result<(), SendError> {
+    let mut user_cursors_at_this_moment = user_cursors.lock().await;
+    match user_cursors_at_this_moment.remove(&who.to_string()) {
+        Some(_) => (),
+        None => (),
+    };
+
+    Ok(())
 }
 
 pub async fn query_counter(shared_counter: Arc<Mutex<i32>>) -> i32 {

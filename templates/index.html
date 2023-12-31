@@ -111,7 +111,6 @@
         parsedOutput = JSON.parse(event.data);
         if (parsedOutput.counter) {
           sharedCounterOutput.textContent = parsedOutput.counter;
-          console.log("Server shared_counter msg recieved", parsedOutput);
         }
         if (parsedOutput.cursor_event) {
           let emoji = emojiMap[parsedOutput.cursor_event.emoji];
@@ -128,7 +127,6 @@
       function onCounterPlusOneClick() {
         sharedCounterOutput.textContent = Number(sharedCounterOutput.textContent) + 1;
         mySocket.send(JSON.stringify({"object_name": "shared_counter", "new_state_serial": "counter_plus_one"}));
-        console.log("Msg to server sent", "counter_plus_one");
       }
       counterPlusOneButton.onclick = onCounterPlusOneClick;
 
@@ -137,7 +135,6 @@
       function onCounterMinusOneClick() {
         sharedCounterOutput.textContent = Number(sharedCounterOutput.textContent) - 1;
         mySocket.send(JSON.stringify({"object_name": "shared_counter", "new_state_serial": "counter_minus_one"}));
-        console.log("Msg to server sent", "counter_minus_one");
       }
       counterMinusOneButton.onclick = onCounterMinusOneClick;
 

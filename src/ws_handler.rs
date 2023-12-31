@@ -73,6 +73,20 @@ async fn handle_socket(
         }
     }
 
+    let initial_user_cursors_arc_clone = Arc::clone(&user_cursors);
+    let initial_user_cursors_to_populate = query_user_cursors(initial_user_cursors_arc_clone).await;
+    for (_, value) in initial_user_cursors_to_populate.into_iter() {
+        let cursor_event_as_string = serde_json::to_string(&value).unwrap();
+        if socket
+            .send(Message::Text(format!("{{\"cursor_event\":{cursor_event_as_string}}}")))
+            .await
+            .is_err()
+        {
+            println!("Could not send initial counter val to {who}!");
+            return;
+        }
+    }
+
     let initial_shared_counter_clone = Arc::clone(&shared_counter);
     let initial_counter_as_text = query_counter(initial_shared_counter_clone).await.to_string();
     if socket
@@ -121,7 +135,7 @@ async fn handle_socket(
         }
     });
 
-    if insert_user_cursor(Arc::clone(&user_cursors), who)
+    if insert_my_new_user_cursor(Arc::clone(&user_cursors), who)
         .await
         .is_err()
     {
@@ -216,7 +230,14 @@ fn process_message(msg: &Message) -> ControlFlow<(), ()> {
     };
 }
 
-async fn insert_user_cursor(user_cursors: Arc<Mutex<HashMap<String, UserCursor>>>, who: SocketAddr) -> Result<(), SendError> {
+pub async fn query_user_cursors(user_cursors: Arc<Mutex<HashMap<String, UserCursor>>>) -> HashMap<String, UserCursor> {
+    let user_cursors = user_cursors.lock().await;
+    let user_cursor_clone = user_cursors.clone();
+
+    user_cursor_clone
+}
+
+async fn insert_my_new_user_cursor(user_cursors: Arc<Mutex<HashMap<String, UserCursor>>>, who: SocketAddr) -> Result<(), SendError> {
     let mut user_cursors_at_this_moment = user_cursors.lock().await;
     let new_user_cursor = UserCursor::new( 0.0, 0.0);
     user_cursors_at_this_moment.insert(who.to_string(), new_user_cursor.clone());

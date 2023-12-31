@@ -11,33 +11,36 @@
   <style>
     .emoji {
       position: absolute;
-      font-size: 24px; /* Set the font size as needed */
+      font-size: 24px;
     }
   </style>
   <script type="text/javascript">
+    /**
+     * Helper functions first
+     */
     const emojiMap = {
-      happy: '😊',
-      upsideDown: '🙃',
-      crazy: '🤪',
-      nerd: '🤓',
-      mindBlown: '🤯',
-      sleeping: '😴',
-      poop: '💩',
-      ghost: '👻',
-      alien: '👽',
-      robot: '🤖',
-      alienMonster: '👾',
-      openHands: '👐',
-      vulcanSalute: '🖖',
-      victory: '✌️',
-      loveYouGesture: '🤟',
-      horns: '🤘',
-      callMe: '🤙',
-      wavingHand: '👋',
-      mouse: '🐭',
-      sauropod: '🦕',
-      tRex: '🦖',
-      question: '❓',
+      happy: "😊",
+      upsideDown: "🙃",
+      crazy: "🤪",
+      nerd: "🤓",
+      mindBlown: "🤯",
+      sleeping: "😴",
+      poop: "💩",
+      ghost: "👻",
+      alien: "👽",
+      robot: "🤖",
+      alienMonster: "👾",
+      openHands: "👐",
+      vulcanSalute: "🖖",
+      victory: "✌️",
+      loveYouGesture: "🤟",
+      horns: "🤘",
+      callMe: "🤙",
+      wavingHand: "👋",
+      mouse: "🐭",
+      sauropod: "🦕",
+      tRex: "🦖",
+      question: "❓",
     };
 
     const allUserCursors = {};
@@ -58,104 +61,156 @@
       return randomKey;
     }
 
-    function generateUUID() { // Public Domain/MIT
-      var d = new Date().getTime();//Timestamp
-      var d2 = ((typeof performance !== 'undefined') && performance.now && (performance.now()*1000)) || 0;//Time in microseconds since page-load or 0 if unsupported
-      return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-        var r = Math.random() * 16;//random number between 0 and 16
-        if(d > 0){//Use timestamp until depleted
-          r = (d + r)%16 | 0;
-          d = Math.floor(d/16);
-        } else {//Use microseconds since page-load if supported
-          r = (d2 + r)%16 | 0;
-          d2 = Math.floor(d2/16);
-        }
-        return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
-      });
+    function generateUUID() {
+      // Public Domain/MIT
+      var d = new Date().getTime(); //Timestamp
+      var d2 =
+        (typeof performance !== "undefined" &&
+          performance.now &&
+          performance.now() * 1000) ||
+        0; //Time in microseconds since page-load or 0 if unsupported
+      return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(
+        /[xy]/g,
+        function (c) {
+          var r = Math.random() * 16; //random number between 0 and 16
+          if (d > 0) {
+            //Use timestamp until depleted
+            r = (d + r) % 16 | 0;
+            d = Math.floor(d / 16);
+          } else {
+            //Use microseconds since page-load if supported
+            r = (d2 + r) % 16 | 0;
+            d2 = Math.floor(d2 / 16);
+          }
+          return (c === "x" ? r : (r & 0x3) | 0x8).toString(16);
+        },
+      );
     }
 
     function drawEmojiAtCoordinates(x, y, emoji, uniqueKey) {
-      const emojiContainer = document.getElementById('emojiContainer');
-      
+      const emojiContainer = document.getElementById("emojiContainer");
+
       // Check if the div with the uniqueKey exists and remove it
       const existingEmoji = document.getElementById(uniqueKey);
       if (existingEmoji) {
         emojiContainer.removeChild(existingEmoji);
       }
-      
+
       // Create a new div with the uniqueKey as ID and fill it with the emoji
-      const emojiElement = document.createElement('div');
+      const emojiElement = document.createElement("div");
       emojiElement.textContent = emoji;
-      emojiElement.classList.add('emoji');
+      emojiElement.classList.add("emoji");
       emojiElement.id = uniqueKey;
       emojiElement.style.left = `${x}%`;
       emojiElement.style.top = `${y}%`;
       emojiContainer.appendChild(emojiElement);
     }
 
+    /**
+     * Now the functions running after the page loaded
+     */
     window.addEventListener("load", function () {
       // create websocket instance
       const wsProtocol = window.location.protocol == "https:" ? "wss:" : "ws:";
-      const mySocket = new WebSocket(wsProtocol + "//" + window.location.hostname + ":" + window.location.port + "/ws");
+      const mySocket = new WebSocket(
+        wsProtocol +
+          "//" +
+          window.location.hostname +
+          ":" +
+          window.location.port +
+          "/ws",
+      );
       const myUserCursorData = {
         x: 0,
         y: 0,
         emoji: generateRandomEmojiKey(),
         client_generated_id: generateUUID(),
       };
-      
-      const sharedCounterOutput = document.getElementById("shared-counter-output");
 
-      // add event listener reacting when message is received
+      const sharedCounterOutput = document.getElementById(
+        "shared-counter-output",
+      );
+
+      // add event listener to react when messages are received
       mySocket.onmessage = function (event) {
         parsedOutput = JSON.parse(event.data);
+
+        if (parsedOutput.cursor_event) {
+          let emoji = emojiMap[parsedOutput.cursor_event.emoji];
+          addCursorToSet(
+            parsedOutput.cursor_event.client_generated_id,
+            parsedOutput.cursor_event,
+          );
+
+          // don't draw our own cursor
+          if (
+            parsedOutput.cursor_event.client_generated_id !=
+            myUserCursorData.client_generated_id
+          ) {
+            drawEmojiAtCoordinates(
+              parsedOutput.cursor_event.x,
+              parsedOutput.cursor_event.y,
+              emoji,
+              parsedOutput.cursor_event.client_generated_id,
+            );
+          }
+        }
         if (parsedOutput.counter) {
           sharedCounterOutput.textContent = parsedOutput.counter;
         }
-        if (parsedOutput.cursor_event) {
-          let emoji = emojiMap[parsedOutput.cursor_event.emoji];
-          addCursorToSet(parsedOutput.cursor_event.client_generated_id, parsedOutput.cursor_event);
-          
-          // don't draw out own cursor
-          if (parsedOutput.cursor_event.client_generated_id != myUserCursorData.client_generated_id) {
-            drawEmojiAtCoordinates(parsedOutput.cursor_event.x, parsedOutput.cursor_event.y, emoji, parsedOutput.cursor_event.client_generated_id);
-          }
-        }
       };
 
-      const counterPlusOneButton = document.querySelector("#counter_plus_one");
-      function onCounterPlusOneClick() {
-        sharedCounterOutput.textContent = Number(sharedCounterOutput.textContent) + 1;
-        mySocket.send(JSON.stringify({"object_name": "shared_counter", "new_state_serial": "counter_plus_one"}));
-      }
-      counterPlusOneButton.onclick = onCounterPlusOneClick;
-
-      const counterMinusOneButton =
-        document.querySelector("#counter_minus_one");
-      function onCounterMinusOneClick() {
-        sharedCounterOutput.textContent = Number(sharedCounterOutput.textContent) - 1;
-        mySocket.send(JSON.stringify({"object_name": "shared_counter", "new_state_serial": "counter_minus_one"}));
-      }
-      counterMinusOneButton.onclick = onCounterMinusOneClick;
-
+      // send our cursor location to server every time it moves
       function onCursorMove(e) {
-        // myUserCursorData.x = event.clientX;
-        // myUserCursorData.y = event.clientY;
-        myUserCursorData.x = parseInt(e.pageX / window.innerWidth * 100);
-        myUserCursorData.y = parseInt(e.pageY / window.innerHeight * 100);
+        myUserCursorData.x = parseInt((e.pageX / window.innerWidth) * 100);
+        myUserCursorData.y = parseInt((e.pageY / window.innerHeight) * 100);
 
-        mySocket.send(JSON.stringify({"object_name": "my_user_cursor", "new_state_serial": JSON.stringify(myUserCursorData)}));
+        mySocket.send(
+          JSON.stringify({
+            object_name: "my_user_cursor",
+            new_state_serial: JSON.stringify(myUserCursorData),
+          }),
+        );
       }
+      document.addEventListener("mousemove", onCursorMove);
 
-      document.addEventListener('mousemove', onCursorMove);
-
-      const emojiDropdown = document.getElementById('emojiDropdown');
+      // react when the user changes the emoji they want to be
+      const emojiDropdown = document.getElementById("emojiDropdown");
       emojiDropdown.value = myUserCursorData.emoji;
       function handleEmojiSelection() {
         const selectedEmoji = emojiDropdown.value;
         myUserCursorData.emoji = selectedEmoji;
       }
       emojiDropdown.onchange = handleEmojiSelection;
+
+      // bottom of page dumb counter button +1
+      const counterPlusOneButton = document.querySelector("#counter_plus_one");
+      function onCounterPlusOneClick() {
+        sharedCounterOutput.textContent =
+          Number(sharedCounterOutput.textContent) + 1;
+        mySocket.send(
+          JSON.stringify({
+            object_name: "shared_counter",
+            new_state_serial: "counter_plus_one",
+          }),
+        );
+      }
+      counterPlusOneButton.onclick = onCounterPlusOneClick;
+
+      // bottom of page dumb counter button -1
+      const counterMinusOneButton =
+        document.querySelector("#counter_minus_one");
+      function onCounterMinusOneClick() {
+        sharedCounterOutput.textContent =
+          Number(sharedCounterOutput.textContent) - 1;
+        mySocket.send(
+          JSON.stringify({
+            object_name: "shared_counter",
+            new_state_serial: "counter_minus_one",
+          }),
+        );
+      }
+      counterMinusOneButton.onclick = onCounterMinusOneClick;
     });
   </script>
 
@@ -178,7 +233,10 @@
           Hello, my name is Lewis and this is my page. In this iteration of my
           site, I&apos;m messing around with websockets.
           <br />
-          To others on this same page, your cursor shows up as a 
+          There may be other people looking at this page at the same time as
+          you!
+          <br />
+          To them, your cursor shows up as a
           <select id="emojiDropdown">
             <option value="happy">😊</option>
             <option value="upsideDown">🙃</option>
@@ -202,7 +260,8 @@
             <option value="sauropod">🦕</option>
             <option value="tRex">🦖</option>
             <option value="question">❓</option>
-          </select> emoji.
+          </select>
+          emoji.
         </p>
 
         <br /><br />

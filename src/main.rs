@@ -189,35 +189,16 @@ where
 struct UserCursor {
     x: f64,
     y: f64,
-    unique_id: String,
     emoji: String,
 }
 
 impl UserCursor {
     // Constructor to create a new User instance
-    fn new(x: f64, y: f64, unique_id: String) -> Self {
-        let emoji = generate_emoji(&unique_id); // Generate emoji based on unique ID
+    fn new(x: f64, y: f64) -> Self {
         UserCursor {
             x,
             y,
-            unique_id,
-            emoji,
+            emoji: "question".to_string(),
         }
     }
-}
-
-// Function to generate an emoji based on the unique ID
-fn generate_emoji(unique_id: &str) -> String {
-    // Replace this with your custom logic to generate an emoji
-    // For demonstration purposes, here's a simple example using the first character of the unique ID
-    let emoji = match unique_id.chars().next() {
-        Some(c) => match c {
-            'a' => "😊",
-            'b' => "🌟",
-            // Add more cases as needed...
-            _ => "❓", // Default emoji if no match found
-        },
-        None => "❓", // Default emoji if the unique ID is empty
-    };
-    emoji.to_string()
 }

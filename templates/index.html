@@ -8,26 +8,83 @@
 
     <title>Lewis&apos; portfolio site</title>
   </head>
+  <style>
+    .emoji {
+      position: absolute;
+      font-size: 24px; /* Set the font size as needed */
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/js-base64@2.5.2/base64.min.js"></script>
   <script type="text/javascript">
+    const emojiMap = {
+      happy: '😊',
+      upsideDown: '🙃',
+      crazy: '🤪',
+      nerd: '🤓',
+      mindBlown: '🤯',
+      sleeping: '😴',
+      poop: '💩',
+      ghost: '👻',
+      alien: '👽',
+      robot: '🤖',
+      alienMonster: '👾',
+      openHands: '👐',
+      vulcanSalute: '🖖',
+      victory: '✌️',
+      loveYouGesture: '🤟',
+      horns: '🤘',
+      callMe: '🤙',
+      wavingHand: '👋',
+      mouse: '🐭',
+      sauropod: '🦕',
+      tRex: '🦖',
+      question: '❓',
+    };
+
+    function generateRandomEmojiKey() {
+      const keys = Object.keys(emojiMap);
+      const randomKey = keys[Math.floor(Math.random() * keys.length)];
+      return randomKey;
+    }
+
+    function drawEmojiAtCoordinates(x, y, emoji) {
+      const emojiElement = document.createElement('div');
+      emojiElement.textContent = emoji;
+      emojiElement.classList.add('emoji');
+      emojiElement.style.left = `${x}px`;
+      emojiElement.style.top = `${y}px`;
+      document.getElementById('emojiContainer').appendChild(emojiElement);
+    }
+
     window.addEventListener("load", function () {
       // create websocket instance
       const wsProtocol = window.location.protocol == "https:" ? "wss:" : "ws:";
       const mySocket = new WebSocket(wsProtocol + "//" + window.location.hostname + ":" + window.location.port + "/ws");
-      const output = document.getElementById("output");
+      const myUserCursorData = {
+        x: 0,
+        y: 0,
+        emoji: generateRandomEmojiKey(),
+      };
+      
+      const sharedCounterOutput = document.getElementById("shared-counter-output");
 
       // add event listener reacting when message is received
       mySocket.onmessage = function (event) {
-        parsedOutput = JSON.parse(event.data);        
-        console.log("Server msg recieved", parsedOutput);
-        if(parsedOutput.counter) {
-          output.textContent = parsedOutput.counter;
+        parsedOutput = JSON.parse(event.data);
+        if (parsedOutput.counter) {
+          sharedCounterOutput.textContent = parsedOutput.counter;
+          console.log("Server msg recieved", parsedOutput);
+        }
+        if (parsedOutput.cursor_event) {
+          let emoji = emojiMap[parsedOutput.cursor_event.emoji];
+          drawEmojiAtCoordinates(parsedOutput.cursor_event.x, parsedOutput.cursor_event.y, emoji);
         }
       };
 
       const counterPlusOneButton = document.querySelector("#counter_plus_one");
       function onCounterPlusOneClick() {
-        output.textContent = Number(output.textContent) + 1;
-        mySocket.send("counter_plus_one");
+        sharedCounterOutput.textContent = Number(sharedCounterOutput.textContent) + 1;
+        mySocket.send(JSON.stringify({"object_name": "shared_counter", "new_state_serial": "counter_plus_one"}));
         console.log("Msg to server sent", "counter_plus_one");
       }
       counterPlusOneButton.onclick = onCounterPlusOneClick;
@@ -35,17 +92,27 @@
       const counterMinusOneButton =
         document.querySelector("#counter_minus_one");
       function onCounterMinusOneClick() {
-        output.textContent = Number(output.textContent) - 1;
-        mySocket.send("counter_minus_one");
+        sharedCounterOutput.textContent = Number(sharedCounterOutput.textContent) - 1;
+        mySocket.send(JSON.stringify({"object_name": "shared_counter", "new_state_serial": "counter_minus_one"}));
         console.log("Msg to server sent", "counter_minus_one");
       }
       counterMinusOneButton.onclick = onCounterMinusOneClick;
+
+      function onCursorMove(event) {
+        myUserCursorData.x = event.clientX;
+        myUserCursorData.y = event.clientY;
+
+        mySocket.send(JSON.stringify({"object_name": "my_user_cursor", "new_state_serial": JSON.stringify(myUserCursorData)}));
+      }
+
+      document.addEventListener('mousemove', onCursorMove);
     });
   </script>
 
   <body
     class="bg-stone-100 dark:bg-black dark:text-white font-helvetica dark:font-light m-0"
   >
+    <div id="emojiContainer"></div>
     <main class="overflow-hidden mx-auto p-8 max-w-2xl">
       <img
         class="rounded-full m-0 w-40 h-40"
@@ -240,7 +307,7 @@
           >
             -1
           </button>
-          <div id="output">{{ initial_counter }}</div>
+          <div id="shared-counter-output">{{ initial_counter }}</div>
         </div>
 
         <div class="flex justify-center mt-24">

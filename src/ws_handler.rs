@@ -4,6 +4,7 @@ use axum::{
 };
 use axum_extra::TypedHeader;
 use broadcaster::BroadcastChannel;
+use serde::{Serialize, Deserialize};
 
 use std::{ops::ControlFlow, borrow::Cow, sync::Arc, collections::HashMap};
 use std::net::SocketAddr;
@@ -43,7 +44,13 @@ pub async fn ws_handler(
 }
 
 // Actual websocket statemachine (one will be spawned per connection)
-async fn handle_socket(mut socket: WebSocket, who: SocketAddr, sender_broadcaster: BroadcastChannel<String>, user_cursors: Arc<Mutex<HashMap<String, UserCursor>>>, shared_counter: Arc<Mutex<i32>> ) {
+async fn handle_socket(
+    mut socket: WebSocket,
+    who: SocketAddr,
+    sender_broadcaster: BroadcastChannel<String>,
+    user_cursors: Arc<Mutex<HashMap<String, UserCursor>>>,
+    shared_counter: Arc<Mutex<i32>>,
+){
     //send a ping (unsupported by some browsers) just to kick things off and get a response
     if socket.send(Message::Ping(vec![1, 2, 3])).await.is_ok() {
         println!("Pinged {who}...");
@@ -114,7 +121,7 @@ async fn handle_socket(mut socket: WebSocket, who: SocketAddr, sender_broadcaste
         }
     });
 
-    if insert_user_cursor(Arc::clone(&user_cursors), sender_broadcaster.clone(), who)
+    if insert_user_cursor(Arc::clone(&user_cursors), who)
         .await
         .is_err()
     {
@@ -122,6 +129,7 @@ async fn handle_socket(mut socket: WebSocket, who: SocketAddr, sender_broadcaste
         return;
     }
 
+    let user_cursors_clone_for_receiving = Arc::clone(&user_cursors);
     let shared_counter_clone_for_receiving = Arc::clone(&shared_counter);
     let broadcaster_clone_for_receiving = sender_broadcaster.clone();
 
@@ -146,12 +154,30 @@ async fn handle_socket(mut socket: WebSocket, who: SocketAddr, sender_broadcaste
                 }
             }
 
-            if mutate_counter(Arc::clone(&shared_counter_clone_for_receiving), broadcaster_clone_for_receiving.clone(), msg_as_text)
-                .await
-                .is_err()
-            {
-                break;
-            }
+            let client_state_update: ClientStateUpdate = serde_json::from_str(&msg_as_text).unwrap();
+
+            match client_state_update.object_name.as_str() {
+                "shared_counter" => {
+                    if mutate_counter(Arc::clone(&shared_counter_clone_for_receiving), broadcaster_clone_for_receiving.clone(), client_state_update.new_state_serial)
+                        .await
+                        .is_err()
+                    {
+                        break;
+                    }
+                },
+                "my_user_cursor" => {
+                    if mutate_my_user_cursor(Arc::clone(&user_cursors_clone_for_receiving), broadcaster_clone_for_receiving.clone(), serde_json::from_str(&client_state_update.new_state_serial).unwrap(), who)
+                        .await
+                        .is_err()
+                    {
+                        break;
+                    }
+                },
+                _=>{
+                    println!("Unsupported object to update");
+                },
+            };
+            
         }
         cnt
     });
@@ -190,11 +216,20 @@ fn process_message(msg: &Message) -> ControlFlow<(), ()> {
     };
 }
 
-async fn insert_user_cursor(user_cursors: Arc<Mutex<HashMap<String, UserCursor>>>, user_cursors_broadcaster: BroadcastChannel<String>, who: SocketAddr) -> Result<(), SendError> {
+async fn insert_user_cursor(user_cursors: Arc<Mutex<HashMap<String, UserCursor>>>, who: SocketAddr) -> Result<(), SendError> {
     let mut user_cursors_at_this_moment = user_cursors.lock().await;
-    let new_user_cursor = UserCursor::new( 0.0, 0.0, who.to_string());
-    user_cursors_at_this_moment.insert(new_user_cursor.unique_id.clone(), new_user_cursor.clone());
-    let cursor_event_as_string = serde_json::to_string(&new_user_cursor).unwrap();
+    let new_user_cursor = UserCursor::new( 0.0, 0.0);
+    user_cursors_at_this_moment.insert(who.to_string(), new_user_cursor.clone());
+
+    Ok(())
+}
+
+async fn mutate_my_user_cursor(user_cursors: Arc<Mutex<HashMap<String, UserCursor>>>, user_cursors_broadcaster: BroadcastChannel<String>, updated_cursor: UserCursor, who: SocketAddr) -> Result<(), SendError> {
+    let mut user_cursors_at_this_moment = user_cursors.lock().await;
+
+    user_cursors_at_this_moment.remove_entry(&who.to_string());
+    user_cursors_at_this_moment.insert(who.to_string(), updated_cursor.clone());
+    let cursor_event_as_string = serde_json::to_string(&updated_cursor).unwrap();
 
     user_cursors_broadcaster.send(&format!("{{\"cursor_event\":{cursor_event_as_string}}}")).await
 }
@@ -205,9 +240,9 @@ pub async fn query_counter(shared_counter: Arc<Mutex<i32>>) -> i32 {
     *counter
 }
 
-async fn mutate_counter(shared_counter: Arc<Mutex<i32>>, shared_counter_broadcaster: BroadcastChannel<String>, msg_as_text: String) -> Result<(), SendError> {
+async fn mutate_counter(shared_counter: Arc<Mutex<i32>>, shared_counter_broadcaster: BroadcastChannel<String>, operation_string: String) -> Result<(), SendError> {
     let mut counter = shared_counter.lock().await;
-    *counter = match msg_as_text.as_str() {
+    *counter = match operation_string.as_str() {
         "counter_plus_one" => *counter + 1,
         "counter_minus_one" => *counter - 1,
         _=>*counter,
@@ -215,4 +250,10 @@ async fn mutate_counter(shared_counter: Arc<Mutex<i32>>, shared_counter_broadcas
     let counter_as_string = counter.to_string();
 
     shared_counter_broadcaster.send(&format!("{{\"counter\":{counter_as_string}}}")).await
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+struct ClientStateUpdate {
+    object_name: String,
+    new_state_serial: String,
 }

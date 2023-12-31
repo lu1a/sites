@@ -148,6 +148,14 @@
       }
 
       document.addEventListener('mousemove', onCursorMove);
+
+      const emojiDropdown = document.getElementById('emojiDropdown');
+      emojiDropdown.value = myUserCursorData.emoji;
+      function handleEmojiSelection() {
+        const selectedEmoji = emojiDropdown.value;
+        myUserCursorData.emoji = selectedEmoji;
+      }
+      emojiDropdown.onchange = handleEmojiSelection;
     });
   </script>
 
@@ -168,7 +176,33 @@
 
         <p class="dark:text-gray-400 text-lg mt-5" aria-hidden="true">
           Hello, my name is Lewis and this is my page. In this iteration of my
-          site, I&apos;m focusing on accessibility and utilitarianism.
+          site, I&apos;m messing around with websockets.
+          <br />
+          To others on this same page, your cursor shows up as a 
+          <select id="emojiDropdown">
+            <option value="happy">😊</option>
+            <option value="upsideDown">🙃</option>
+            <option value="crazy">🤪</option>
+            <option value="nerd">🤓</option>
+            <option value="mindBlown">🤯</option>
+            <option value="sleeping">😴</option>
+            <option value="poop">💩</option>
+            <option value="ghost">👻</option>
+            <option value="alien">👽</option>
+            <option value="robot">🤖</option>
+            <option value="alienMonster">👾</option>
+            <option value="openHands">👐</option>
+            <option value="vulcanSalute">🖖</option>
+            <option value="victory">✌️</option>
+            <option value="loveYouGesture">🤟</option>
+            <option value="horns">🤘</option>
+            <option value="callMe">🤙</option>
+            <option value="wavingHand">👋</option>
+            <option value="mouse">🐭</option>
+            <option value="sauropod">🦕</option>
+            <option value="tRex">🦖</option>
+            <option value="question">❓</option>
+          </select> emoji.
         </p>
 
         <br /><br />

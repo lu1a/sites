@@ -9,31 +9,16 @@ use axum::{
 use broadcaster::BroadcastChannel;
 use futures::lock::Mutex;
 use serde::{Serialize, Deserialize};
-use sqlx::postgres::{PgPool, PgPoolOptions};
 use tower_http::{services::ServeDir, trace::{TraceLayer, DefaultMakeSpan}};
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 
-use std::{time::Duration, net::SocketAddr, i32, sync::Arc, collections::HashMap};
+use std::{collections::HashMap, env, i32, net::SocketAddr, sync::Arc};
 
-mod db;
 mod ws_handler;
 
 #[derive(Clone)]
 struct AppState {
-    db_state: DBState,
     ws_state: WSState,
-}
-
-#[derive(Clone)]
-struct DBState {
-    pool: PgPool,
-}
-
-// support converting an `AppState` in an `DBState`
-impl FromRef<AppState> for DBState {
-    fn from_ref(app_state: &AppState) -> DBState {
-        app_state.db_state.clone()
-    }
 }
 
 #[derive(Clone)]
@@ -60,17 +45,13 @@ async fn main() {
         )
         .with(tracing_subscriber::fmt::layer())
         .init();
-
-    let db_connection_str = std::env::var("DB_CONNECTION_URL")
-        .unwrap_or_else(|_| "postgres://postgres:password@localhost".to_string());
-
-    // set up connection pool
-    let pool = PgPoolOptions::new()
-        .max_connections(5)
-        .acquire_timeout(Duration::from_secs(3))
-        .connect(&db_connection_str)
-        .await
-        .expect("can't connect to database");
+    
+    // Get CLI args
+    let args: Vec<String> = env::args().collect();
+    let mut static_folder_name = "static";
+    if args.len() > 1 {
+        static_folder_name = &args[1];
+    }
 
     // my state variables to be updated via websocket
     let sender_broadcaster = BroadcastChannel::new();
@@ -78,9 +59,6 @@ async fn main() {
     let user_cursors = Arc::new(Mutex::new(HashMap::new()));
 
     let state = AppState {
-        db_state: DBState {
-            pool: pool,
-        },
         ws_state: WSState {
             sender_broadcaster: sender_broadcaster,
             shared_counter: shared_counter,
@@ -90,9 +68,8 @@ async fn main() {
 
     // build the app with some routes
     let app = Router::new()
-        .nest_service("/static", ServeDir::new("static"))
+        .nest_service("/static", ServeDir::new(static_folder_name))
         .route("/", get(index_handler))
-        .route("/stats", get(stats_handler))
         .route("/ws", get(ws_handler::ws_handler))
         .with_state(state)
         // logging so we can see what's going on
@@ -124,20 +101,6 @@ async fn index_handler(State(ws_state): State<WSState>) -> impl IntoResponse {
 #[template(path = "index.html")]
 struct IndexTemplate {
     initial_counter: i32,
-}
-
-async fn stats_handler(State(db_state): State<DBState>) -> Result<impl IntoResponse, AppError> {
-    let unique_ips_by_country: Vec<db::CountryCount> = db::get_unique_ips_by_country(&db_state.pool).await?;
-
-    let template = StatsTemplate { unique_ips_by_country };
-
-    Ok(HtmlTemplate(template))
-}
-
-#[derive(Template)]
-#[template(path = "stats.html")]
-struct StatsTemplate {
-    unique_ips_by_country: Vec<db::CountryCount>,
 }
 
 struct HtmlTemplate<T>(T);

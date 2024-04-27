@@ -54,7 +54,6 @@ build_stage() {
 deploy_stage() {
     echo "Running deploy stage"
 
-
     nginx_config_file="/etc/nginx/sites-available/lewistorrington.fi"
     # Define the ports to toggle between
     port1="3000"

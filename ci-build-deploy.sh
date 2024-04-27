@@ -102,6 +102,9 @@ EOF
     systemctl start portfolio-site-$LATEST_COMMIT
     systemctl enable portfolio-site-$LATEST_COMMIT
 
+    # Wait 5 seconds for the new service to properly start up
+    sleep 5
+
     sed -i "s|\(^\s*proxy_pass\s+http://127.0.0.1:\)[0-9]\+;|\1$new_port;|" "$nginx_config_file"
 
     systemctl disable portfolio-site-$LAST_DEPLOYED_COMMIT

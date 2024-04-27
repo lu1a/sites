@@ -31,7 +31,7 @@ build_stage() {
 
     # Add any custom actions you want to perform when a new change is detected
     cargo build --release --bin portfolio-site
-    mv /targets/release/portfolio-site /targets/release/portfolio-site-$latest_commit
+    mv /target/release/portfolio-site /target/release/portfolio-site-$latest_commit
 }
 
 deploy_stage() {

@@ -12,8 +12,6 @@ RELEASE_FOLDER="./target/release"
 LAST_DEPLOYED_COMMIT=""
 LATEST_COMMIT=""
 
-echo "hi"
-
 get_last_deployed_commit() {
     file_path=$(find $RELEASE_FOLDER -type f -name 'portfolio-site-*' -print -quit)
 

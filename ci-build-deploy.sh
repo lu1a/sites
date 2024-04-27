@@ -62,6 +62,7 @@ deploy_stage() {
     new_port="3000"
     # Use grep and awk to find the proxy_pass directive and extract the port number
     proxy_pass_port=$(grep -E '^\s*proxy_pass\s+http://127.0.0.1:([0-9]+);' "$nginx_config_file" | awk -F':' '{print $NF}')
+    proxy_pass_port="${proxy_pass_port%;}"
     # Check the extracted port number and toggle between port1 and port2
     if [ "$proxy_pass_port" == "$port1" ]; then
         # Toggle to port2

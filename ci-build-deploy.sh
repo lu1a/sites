@@ -13,6 +13,7 @@ RELEASE_FOLDER="${REPO_FOLDER}/target/release"
 LAST_DEPLOYED_COMMIT=""
 LATEST_COMMIT=""
 
+
 get_last_deployed_commit() {
     file_path=$(find $RELEASE_FOLDER -type f -name 'portfolio-site-*' -print -quit)
 

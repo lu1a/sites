@@ -7,7 +7,7 @@ REPO_NAME="portfolio-site"
 # URL of the GitHub repository's main branch
 GITHUB_URL="https://github.com/${USERNAME}/${REPO_NAME}/commits/main"
 
-RELEASE_FOLDER="./target/release"
+RELEASE_FOLDER="/root/Repositories/portfolio-site/target/release"
 
 LAST_DEPLOYED_COMMIT=""
 LATEST_COMMIT=""
@@ -54,7 +54,54 @@ build_stage() {
 deploy_stage() {
     echo "Running deploy stage"
 
-    # TODO: actual systemd switchover
+
+    nginx_config_file="/etc/nginx/sites-available/lewistorrington.fi"
+    # Define the ports to toggle between
+    port1="3000"
+    port2="3001"
+    new_port="3000"
+    # Use grep and awk to find the proxy_pass directive and extract the port number
+    proxy_pass_port=$(grep -E '^\s*proxy_pass\s+http://127.0.0.1:([0-9]+);' "$nginx_config_file" | awk -F':' '{print $NF}')
+    # Check the extracted port number and toggle between port1 and port2
+    if [ "$proxy_pass_port" == "$port1" ]; then
+        # Toggle to port2
+        new_port="$port2"
+    elif [ "$proxy_pass_port" == "$port2" ]; then
+        # Toggle to port1
+        new_port="$port1"
+    else
+        echo "Error: Port number not found or does not match expected values."
+        exit 1
+    fi
+    echo "Current port: $proxy_pass_port"
+    echo "Toggled port: $new_port"
+
+    # Create and run a new service for the newly built commit
+    new_service_contents=$(cat <<EOF
+[Unit]
+Description=portfolio-site service
+After=network.target
+StartLimitIntervalSec=0
+[Service]
+Type=simple
+Restart=always
+RestartSec=1
+User=root
+ExecStart=$RELEASE_FOLDER/portfolio-site-$LATEST_COMMIT $new_port /root/Repositories/portfolio-site/static
+
+[Install]
+WantedBy=multi-user.target
+EOF
+    )
+    echo "$new_service_contents" > /etc/systemd/system/portfolio-site-$LATEST_COMMIT.service
+    systemctl start portfolio-site-$LATEST_COMMIT
+    systemctl enable portfolio-site-$LATEST_COMMIT
+
+    sed -i "s|\(^\s*proxy_pass\s+http://127.0.0.1:\)[0-9]\+;|\1$new_port;|" "$nginx_config_file"
+
+    systemctl disable portfolio-site-$LAST_DEPLOYED_COMMIT
+    systemctl stop portfolio-site-$LAST_DEPLOYED_COMMIT
+    rm /etc/systemd/system/portfolio-site-$LAST_DEPLOYED_COMMIT.service
 
     rm $RELEASE_FOLDER/portfolio-site-$LAST_DEPLOYED_COMMIT
 }

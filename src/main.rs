@@ -48,9 +48,13 @@ async fn main() {
     
     // Get CLI args
     let args: Vec<String> = env::args().collect();
+    let mut port_to_serve = "3000";
     let mut static_folder_name = "static";
     if args.len() > 1 {
-        static_folder_name = &args[1];
+        port_to_serve = &args[1];
+    }
+    if args.len() > 2 {
+        static_folder_name = &args[2];
     }
 
     // my state variables to be updated via websocket
@@ -79,7 +83,7 @@ async fn main() {
         );
 
     // run it
-    let listener = tokio::net::TcpListener::bind("0.0.0.0:3000")
+    let listener = tokio::net::TcpListener::bind("0.0.0.0:".to_owned() + port_to_serve)
         .await
         .unwrap();
     tracing::debug!("listening on {}", listener.local_addr().unwrap());

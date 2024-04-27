@@ -30,7 +30,8 @@ build_stage() {
     echo "Running build stage"
 
     # Add any custom actions you want to perform when a new change is detected
-    cargo build --release --bin portfolio-site -o portfolio-site-$latest_commit
+    cargo build --release --bin portfolio-site
+    mv /targets/release/portfolio-site /targets/release/portfolio-site-$latest_commit
 }
 
 deploy_stage() {

@@ -106,6 +106,7 @@ EOF
     sleep 5
 
     sed -i "s|\(^\s*proxy_pass\s+http://127.0.0.1:\)[0-9]\+;|\1$new_port;|" "$nginx_config_file"
+    nginx -t && nginx -s reload
 
     systemctl disable portfolio-site-$LAST_DEPLOYED_COMMIT
     systemctl stop portfolio-site-$LAST_DEPLOYED_COMMIT

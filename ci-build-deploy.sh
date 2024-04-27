@@ -46,7 +46,7 @@ get_latest_commit() {
 build_stage() {
     echo "Running build stage"
 
-    cargo build --release --bin portfolio-site
+    cargo build --manifest-path=/root/Repositories/portfolio-site/Cargo.toml --release --bin portfolio-site
     mv $RELEASE_FOLDER/portfolio-site $RELEASE_FOLDER/portfolio-site-$LATEST_COMMIT
     chmod 700 $RELEASE_FOLDER/portfolio-site-$LATEST_COMMIT
 }

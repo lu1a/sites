@@ -55,7 +55,7 @@ do
         build_stage
         deploy_stage
     else
-        echo "Nothing new"
+        echo "Nothing new 1"
     fi
 
     # Wait for 10 seconds before the next check

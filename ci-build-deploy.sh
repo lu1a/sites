@@ -10,6 +10,8 @@ URL="https://github.com/${USERNAME}/${REPO_NAME}/commits/main"
 last_commit=""
 latest_commit=""
 
+# TODO: check if the latest commit has a change to this script, and reload self if so
+
 check_for_new_commit() {
     # Use curl to fetch the HTML content of the repository's main branch page
     html_content=$(curl -s "$URL")

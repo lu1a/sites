@@ -4,21 +4,24 @@
 USERNAME="lu1a"
 REPO_NAME="portfolio-site"
 
+# URL of the GitHub repository's main branch
+URL="https://github.com/${USERNAME}/${REPO_NAME}/commits/main"
+
 last_commit=""
 latest_commit=""
 
 check_for_new_commit() {
-    # Use curl to query the GitHub API for the latest commit on the main branch
-    response=$(curl -s "https://api.github.com/repos/${USERNAME}/${REPO_NAME}/commits/main")
+    # Use curl to fetch the HTML content of the repository's main branch page
+    html_content=$(curl -s "$URL")
 
     # Check if the request was successful
-    if [[ "$(echo "$response" | jq -r '.message')" == "Not Found" ]]; then
-        echo "Repository or branch not found. Check your username and repository name."
+    if [ $? -ne 0 ]; then
+        echo "Error: Failed to fetch HTML content from GitHub"
         exit 1
     fi
 
-    # Get the latest commit SHA from the response
-    latest_commit=$(echo "$response" | jq -r '.sha')
+    # Extract the latest commit SHA from the HTML content (using a simple pattern match)
+    latest_commit=$(echo "$html_content" | grep -oE 'commit\/[a-f0-9]{40}' | head -n1 | cut -d'/' -f2)
 }
 
 build_stage() {
@@ -32,12 +35,12 @@ deploy_stage() {
 }
 
 # Initialize the last_commit variable
-response=$(curl -s "https://api.github.com/repos/${USERNAME}/${REPO_NAME}/commits/main")
-if [[ "$(echo "$response" | jq -r '.message')" == "Not Found" ]]; then
-    echo "Repository or branch not found. Check your username and repository name."
+html_content=$(curl -s "$URL")
+if [ $? -ne 0 ]; then
+    echo "Error: Failed to fetch HTML content from GitHub"
     exit 1
 fi
-last_commit=$(echo "$response" | jq -r '.sha')
+last_commit=$(echo "$html_content" | grep -oE 'commit\/[a-f0-9]{40}' | head -n1 | cut -d'/' -f2)
 
 # Infinite loop
 while true

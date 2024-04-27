@@ -26,7 +26,6 @@ get_last_deployed_commit() {
         echo "Last deployed commit: $last_commit"
     else
         echo "No last deployed commit file found."
-        # exit 1
     fi
 }
 
@@ -52,14 +51,15 @@ build_stage() {
     cargo build --release --bin portfolio-site
     mv $RELEASE_FOLDER/portfolio-site $RELEASE_FOLDER/portfolio-site-$latest_commit
     chmod 700 $RELEASE_FOLDER/portfolio-site-$latest_commit
-
-    rm $RELEASE_FOLDER/portfolio-site-$last_commit
 }
 
 deploy_stage() {
     echo "Running deploy stage"
     # Add any custom actions you want to perform when a new change is detected
 
+    # TODO: actual systemd switchover
+
+    rm $RELEASE_FOLDER/portfolio-site-$last_commit
 }
 
 get_last_deployed_commit
@@ -70,6 +70,4 @@ if [[ "$latest_commit" != "$last_commit" ]]; then
 
     build_stage
     deploy_stage
-
-    last_commit="$latest_commit"
 fi

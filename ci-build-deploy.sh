@@ -7,7 +7,8 @@ REPO_NAME="portfolio-site"
 # URL of the GitHub repository's main branch
 GITHUB_URL="https://github.com/${USERNAME}/${REPO_NAME}/commits/main"
 
-RELEASE_FOLDER="/root/Repositories/portfolio-site/target/release"
+REPO_FOLDER="/root/Repositories/portfolio-site"
+RELEASE_FOLDER="${REPO_FOLDER}/target/release"
 
 LAST_DEPLOYED_COMMIT=""
 LATEST_COMMIT=""
@@ -41,6 +42,10 @@ get_latest_commit() {
         exit 1
     fi
     echo "Latest commit on GitHub: $LATEST_COMMIT"
+}
+
+pull_latest_commit() {
+    git -C $REPO_FOLDER pull
 }
 
 build_stage() {
@@ -87,7 +92,7 @@ Type=simple
 Restart=always
 RestartSec=1
 User=root
-ExecStart=$RELEASE_FOLDER/portfolio-site-$LATEST_COMMIT $new_port /root/Repositories/portfolio-site/static
+ExecStart=$RELEASE_FOLDER/portfolio-site-$LATEST_COMMIT $new_port $REPO_FOLDER/static
 
 [Install]
 WantedBy=multi-user.target
@@ -111,6 +116,7 @@ get_latest_commit
 
 if [[ "$LATEST_COMMIT" != "$LAST_DEPLOYED_COMMIT" ]]; then
     echo "A new change has been pushed"
+    pull_latest_commit
 
     build_stage
     deploy_stage

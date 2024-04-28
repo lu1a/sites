@@ -1,6 +1,5 @@
 #!/bin/bash
 
-USERNAME="lu1a"
 REPO_NAME="portfolio-site"
 
 REPO_FOLDER="/root/Repositories/${REPO_NAME}"
@@ -17,10 +16,7 @@ get_last_deployed_commit() {
     file_path=$(find $RELEASE_FOLDER -type f -name "${REPO_NAME}-*" -print -quit)
 
     if [[ -n "$file_path" ]]; then
-        # Extract the filename from the path
         filename=$(basename "$file_path")
-
-        # Extract the latter half of the filename
         LAST_DEPLOYED_COMMIT="${filename##*-}"
 
         # DEBUG

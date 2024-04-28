@@ -6,5 +6,5 @@ Note to self: don't forget to run `./tailwindcss -o ./static/index.css --minify`
 
 To run:
 ```
-cargo run -- {static-files-dir-path}
+cargo run -- {port-number} {static-files-dir-path}
 ```

@@ -89,10 +89,9 @@ EOF
         servicename=$(basename "$file")
         if [[ "$servicename" != "portfolio-site-$LATEST_COMMIT.service" ]]; then
             echo "Deleting previous deployment: $servicename"
-            # Extract commit hash from filename
-            commit_hash="${servicename#$REPO_NAME-}"  # Remove prefix "$REPO_NAME-"
-            commit_hash="${commit_hash%.service}"       # Remove suffix ".service"
-            # Add your processing logic here (e.g., perform actions on "$file")
+
+            commit_hash="${servicename#$REPO_NAME-}"
+            commit_hash="${commit_hash%.service}"
             systemctl disable $REPO_NAME-$commit_hash
             systemctl stop $REPO_NAME-$commit_hash
             rm $SYSTEMD_CONFIG_FOLDER/$REPO_NAME-$commit_hash.service

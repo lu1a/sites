@@ -43,8 +43,8 @@ build_stage() {
     echo "Running build stage"
 
     cargo build --manifest-path=$REPO_FOLDER/Cargo.toml --release --bin $REPO_NAME
-    mv $RELEASE_FOLDER/portfolio-site $RELEASE_FOLDER/portfolio-site-$LATEST_COMMIT
-    chmod 700 $RELEASE_FOLDER/portfolio-site-$LATEST_COMMIT
+    mv $RELEASE_FOLDER/$REPO_NAME $RELEASE_FOLDER/$REPO_NAME-$LATEST_COMMIT
+    chmod 700 $RELEASE_FOLDER/$REPO_NAME-$LATEST_COMMIT
 }
 
 deploy_stage() {

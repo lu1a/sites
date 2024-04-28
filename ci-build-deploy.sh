@@ -102,11 +102,25 @@ EOF
     sed -i "s|^\([[:space:]]*proxy_pass[[:space:]]\+http://127.0.0.1:\)[0-9]\+;|\1$new_port;|" "$NGINX_CONFIG_FILE"
     nginx -t && nginx -s reload
 
-    systemctl disable $REPO_NAME-$LAST_DEPLOYED_COMMIT
-    systemctl stop $REPO_NAME-$LAST_DEPLOYED_COMMIT
-    rm $SYSTEMD_CONFIG_FOLDER/$REPO_NAME-$LAST_DEPLOYED_COMMIT.service
+    previous_deployments=( "$SYSTEMD_CONFIG_FOLDER"/$REPO_NAME-*.service )
 
-    rm $RELEASE_FOLDER/$REPO_NAME-$LAST_DEPLOYED_COMMIT
+    # Loop over the files, excluding the one with the specific commit hash
+    for file in "${previous_deployments[@]}"; do
+        servicename=$(basename "$file")
+        if [[ "$servicename" != "portfolio-site-$LATEST_COMMIT.service" ]]; then
+            echo "Deleting previous deployment: $servicename"
+            # Extract commit hash from filename
+            commit_hash="${servicename#$REPO_NAME-}"  # Remove prefix "$REPO_NAME-"
+            commit_hash="${commit_hash%.service}"       # Remove suffix ".service"
+            # Add your processing logic here (e.g., perform actions on "$file")
+            systemctl disable $REPO_NAME-$commit_hash
+            systemctl stop $REPO_NAME-$commit_hash
+            rm $SYSTEMD_CONFIG_FOLDER/$REPO_NAME-$commit_hash.service
+
+            rm $RELEASE_FOLDER/$REPO_NAME-$commit_hash
+        fi
+    done
+    systemctl daemon-reload
 }
 
 get_last_deployed_commit

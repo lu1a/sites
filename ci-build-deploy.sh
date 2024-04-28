@@ -126,7 +126,7 @@ get_last_deployed_commit
 get_latest_commit
 
 if [[ "$LATEST_COMMIT" != "$LAST_DEPLOYED_COMMIT" ]]; then
-    echo "$(date --utc +%Y%m%d_%H%M%SZ) -- A new change has been pushed"
+    echo "$(date --utc +%Y-%m-%dT%H:%M:%SZ) -- A new change has been pushed"
 
     build_stage
     deploy_stage

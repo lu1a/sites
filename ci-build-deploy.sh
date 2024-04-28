@@ -1,11 +1,7 @@
 #!/bin/bash
 
-# Set your GitHub username and repository name
 USERNAME="lu1a"
 REPO_NAME="portfolio-site"
-
-# URL of the GitHub repository's main branch
-GITHUB_URL="https://github.com/${USERNAME}/${REPO_NAME}/commits/main"
 
 REPO_FOLDER="/root/Repositories/${REPO_NAME}"
 RELEASE_FOLDER="${REPO_FOLDER}/target/release"
@@ -23,11 +19,12 @@ get_last_deployed_commit() {
     if [[ -n "$file_path" ]]; then
         # Extract the filename from the path
         filename=$(basename "$file_path")
-        
+
         # Extract the latter half of the filename
         LAST_DEPLOYED_COMMIT="${filename##*-}"
-        
-        echo "Last deployed commit: $LAST_DEPLOYED_COMMIT"
+
+        # DEBUG
+        # echo "Last deployed commit: $LAST_DEPLOYED_COMMIT"
     else
         echo "No previous deployment found."
     fi
@@ -36,7 +33,9 @@ get_last_deployed_commit() {
 get_latest_commit() {
     git -C $REPO_FOLDER pull
     LATEST_COMMIT=$(git -C $REPO_FOLDER rev-parse HEAD)
-    echo "Latest commit on GitHub: $LATEST_COMMIT"
+
+    # DEBUG
+    # echo "Latest commit on GitHub: $LATEST_COMMIT"
 }
 
 build_stage() {
@@ -127,7 +126,7 @@ get_last_deployed_commit
 get_latest_commit
 
 if [[ "$LATEST_COMMIT" != "$LAST_DEPLOYED_COMMIT" ]]; then
-    echo "A new change has been pushed"
+    echo "$(date --utc +%Y%m%d_%H%M%SZ) -- A new change has been pushed"
 
     build_stage
     deploy_stage

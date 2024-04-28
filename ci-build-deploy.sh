@@ -18,7 +18,7 @@ LAST_DEPLOYED_COMMIT=""
 LATEST_COMMIT=""
 
 get_last_deployed_commit() {
-    file_path=$(find $RELEASE_FOLDER -type f -name '$REPO_NAME-*' -print -quit)
+    file_path=$(find $RELEASE_FOLDER -type f -name "${REPO_NAME}-*" -print -quit)
 
     if [[ -n "$file_path" ]]; then
         # Extract the filename from the path

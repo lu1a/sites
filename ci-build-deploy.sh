@@ -45,28 +45,13 @@ build_stage() {
 deploy_stage() {
     echo "Running deploy stage"
 
-    # Define the ports to toggle between
-    port1="$((DESIRED_PORT))"
-    port2="$((DESIRED_PORT + 1))"
-    port3="$((DESIRED_PORT + 2))"
-    new_port="$((DESIRED_PORT))"
     # Use grep and awk to find the proxy_pass directive and extract the port number
     proxy_pass_port=$(grep -E '^\s*proxy_pass\s+http://127.0.0.1:([0-9]+);' "$NGINX_CONFIG_FILE" | awk -F':' '{print $NF}')
     proxy_pass_port="${proxy_pass_port%;}"
-    # Check the extracted port number and toggle between port1 and port2
-    if [ "$proxy_pass_port" == "$port1" ]; then
-        # Increment to port2
-        new_port="$port2"
-    elif [ "$proxy_pass_port" == "$port2" ]; then
-        # Increment to port3
-        new_port="$port3"
-    elif [ "$proxy_pass_port" == "$port3" ]; then
-        # Wrap to port1
-        new_port="$port1"
-    else
-        echo "Error: Port number not found or does not match expected values."
-        exit 1
-    fi
+
+    # increment one port up for the new service, or wrap back to original desired port on the third increment
+    new_port="$((((proxy_pass_port + 1) % 3) + DESIRED_PORT))"
+
     echo "Current port: $proxy_pass_port"
     echo "Toggled port: $new_port"
 

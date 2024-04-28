@@ -2,7 +2,7 @@
 
 REPO_NAME="portfolio-site"
 
-REPO_FOLDER="/root/Repositories/${REPO_NAME}"
+REPO_FOLDER="/root/${REPO_NAME}"
 RELEASE_FOLDER="${REPO_FOLDER}/target/release"
 
 NGINX_CONFIG_FILE="/etc/nginx/sites-available/lewistorrington.fi"

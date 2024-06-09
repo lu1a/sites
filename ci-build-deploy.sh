@@ -37,7 +37,7 @@ get_latest_commit() {
 build_stage() {
     echo "Running build stage"
 
-    /home/lewis/.cargo/bin/cargo build --manifest-path=$REPO_FOLDER/Cargo.toml --release --bin $REPO_NAME
+    cargo build --manifest-path=$REPO_FOLDER/Cargo.toml --release --bin $REPO_NAME
     mv $RELEASE_FOLDER/$REPO_NAME $RELEASE_FOLDER/$REPO_NAME-$LATEST_COMMIT
     chmod 700 $RELEASE_FOLDER/$REPO_NAME-$LATEST_COMMIT
 }

@@ -1,40 +1,14 @@
 use askama::Template;
 use axum::{
-    extract::{State, FromRef},
     http::StatusCode,
     response::{Html, IntoResponse, Response},
     routing::get,
     Router,
 };
-use broadcaster::BroadcastChannel;
-use futures::lock::Mutex;
-use serde::{Serialize, Deserialize};
 use tower_http::{services::ServeDir, trace::{TraceLayer, DefaultMakeSpan}};
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 
-use std::{collections::HashMap, env, i32, net::SocketAddr, sync::Arc};
-
-mod ws_handler;
-
-#[derive(Clone)]
-struct AppState {
-    ws_state: WSState,
-}
-
-#[derive(Clone)]
-struct WSState {
-    sender_broadcaster: BroadcastChannel<String>,
-
-    shared_counter: Arc<Mutex<i32>>,
-    user_cursors: Arc<Mutex<HashMap<String, UserCursor>>>,
-}
-
-// support converting an `AppState` in an `ApiState`
-impl FromRef<AppState> for WSState {
-    fn from_ref(app_state: &AppState) -> WSState {
-        app_state.ws_state.clone()
-    }
-}
+use std::{env, net::SocketAddr};
 
 #[tokio::main]
 async fn main() {
@@ -57,25 +31,10 @@ async fn main() {
         static_folder_name = &args[2];
     }
 
-    // my state variables to be updated via websocket
-    let sender_broadcaster = BroadcastChannel::new();
-    let shared_counter = Arc::new(Mutex::new(0));
-    let user_cursors = Arc::new(Mutex::new(HashMap::new()));
-
-    let state = AppState {
-        ws_state: WSState {
-            sender_broadcaster: sender_broadcaster,
-            shared_counter: shared_counter,
-            user_cursors,
-        }
-    };
-
     // build the app with some routes
     let app = Router::new()
         .nest_service("/static", ServeDir::new(static_folder_name))
         .route("/", get(index_handler))
-        .route("/ws", get(ws_handler::ws_handler))
-        .with_state(state)
         // logging so we can see what's going on
         .layer(
             TraceLayer::new_for_http()
@@ -95,17 +54,14 @@ async fn main() {
     .unwrap();
 }
 
-async fn index_handler(State(ws_state): State<WSState>) -> impl IntoResponse {
-    let initial_counter = ws_handler::query_counter(ws_state.shared_counter).await;
-    let template = IndexTemplate { initial_counter };
+async fn index_handler() -> impl IntoResponse {
+    let template = IndexTemplate {};
     HtmlTemplate(template)
 }
 
 #[derive(Template)]
 #[template(path = "index.html")]
-struct IndexTemplate {
-    initial_counter: i32,
-}
+struct IndexTemplate {}
 
 struct HtmlTemplate<T>(T);
 
@@ -152,22 +108,3 @@ where
     }
 }
 
-#[derive(Clone, Debug, Serialize, Deserialize)]
-struct UserCursor {
-    x: f64,
-    y: f64,
-    emoji: String,
-    client_generated_id: String,
-}
-
-impl UserCursor {
-    // Constructor to create a new User instance
-    fn new(x: f64, y: f64) -> Self {
-        UserCursor {
-            x,
-            y,
-            emoji: "question".to_string(),
-            client_generated_id: String::new(),
-        }
-    }
-}
